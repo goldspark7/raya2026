@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katalog Bunga Api 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #064e3b; /* Deep Raya Green */
+            background-image: radial-gradient(#fbbf24 0.5px, transparent 0.5px), radial-gradient(#fbbf24 0.5px, #064e3b 0.5px);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+            background-attachment: fixed;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .animate-slide-up { animation: slideUp 0.3s ease-out; }
+        
+        .product-card:active { transform: scale(0.98); }
+        .category-btn.active { 
+            background-color: #fbbf24; 
+            color: #064e3b;
+            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3);
+            border-color: transparent;
+        }
+        .raya-card {
+            border: 1px solid rgba(251, 191, 36, 0.2);
+            background: rgba(255, 255, 255, 0.98);
+        }
+        .sold-out-overlay {
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(2px);
+        }
+    </style>
+</head>
+<body class="text-white pb-24">
+
+    <!-- Sticky Navigation -->
+    <nav class="sticky top-0 z-50 bg-[#064e3b]/95 backdrop-blur-md border-b border-[#fbbf24]/30 px-4 py-3 flex justify-between items-center shadow-2xl">
+        <div class="flex flex-col">
+            <div class="flex items-center gap-2">
+                <span class="font-extrabold text-lg text-[#fbbf24] leading-none uppercase tracking-tight">Katalog 2026</span>
+                <span class="text-xs">🌙</span>
+            </div>
+            <span class="text-[10px] text-[#fbbf24]/70 mt-1 uppercase tracking-tighter text-nowrap">Bunga Api Aidilfitri</span>
+        </div>
+        <button onclick="toggleCart()" class="relative p-2.5 bg-[#fbbf24] text-[#064e3b] rounded-full shadow-lg active:scale-90 transition-transform">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+            <span id="cart-count" class="absolute -top-1 -right-1 bg-white text-[#064e3b] text-[10px] font-black px-2 py-0.5 rounded-full border-2 border-[#064e3b]">0</span>
+        </button>
+    </nav>
+
+    <!-- Header -->
+    <header class="py-10 px-4 text-center">
+        <div class="inline-block mb-2 px-4 py-1.5 bg-[#fbbf24]/20 border border-[#fbbf24]/40 rounded-full text-[#fbbf24] text-[11px] font-bold uppercase tracking-widest">
+            Katalog Bunga Api 2026
+        </div>
+        <h1 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-b from-yellow-200 to-[#fbbf24] mb-2">
+            Senarai Produk Raya
+        </h1>
+        <p class="text-yellow-100/60 text-xs italic tracking-wide">Pilih kuantiti & hantar draf pesanan ke WhatsApp untuk sebut harga.</p>
+    </header>
+
+    <!-- Category Filter -->
+    <div class="sticky top-[65px] z-40 bg-[#064e3b]/90 backdrop-blur-sm py-3 mb-4 shadow-lg">
+        <div class="flex gap-2 overflow-x-auto px-4 hide-scrollbar" id="category-list">
+            <button onclick="filterProducts('all')" class="category-btn active whitespace-nowrap px-5 py-2 rounded-xl text-xs font-bold border border-[#fbbf24]/30 transition-all">Semua</button>
+            <button onclick="filterProducts('手持系列')" class="category-btn whitespace-nowrap px-5 py-2 rounded-xl text-xs font-bold border border-[#fbbf24]/30 transition-all">🪄 Sparklers</button>
+            <button onclick="filterProducts('花筒系列')" class="category-btn whitespace-nowrap px-5 py-2 rounded-xl text-xs font-bold border border-[#fbbf24]/30 transition-all">✨ Fountain</button>
+            <button onclick="filterProducts('玩具烟花系列')" class="category-btn whitespace-nowrap px-5 py-2 rounded-xl text-xs font-bold border border-[#fbbf24]/30 transition-all">🤡 Kids/Pop</button>
+            <button onclick="filterProducts('传统鞭炮')" class="category-btn whitespace-nowrap px-5 py-2 rounded-xl text-xs font-bold border border-[#fbbf24]/30 transition-all">🧨 Mercun Papan</button>
+            <button onclick="filterProducts('单发系列')" class="category-btn whitespace-nowrap px-5 py-2 rounded-xl text-xs font-bold border border-[#fbbf24]/30 transition-all">🚀 Single Shot</button>
+            <button onclick="filterProducts('吐珠/火箭系列')" class="category-btn whitespace-nowrap px-5 py-2 rounded-xl text-xs font-bold border border-[#fbbf24]/30 transition-all">☄️ Roman Candle</button>
+            <button onclick="filterProducts('盆花/大组合')" class="category-btn whitespace-nowrap px-5 py-2 rounded-xl text-xs font-bold border border-[#fbbf24]/30 transition-all">🎆 Cake/Box</button>
+        </div>
+    </div>
+
+    <!-- Product Grid -->
+    <main class="container mx-auto px-4 pb-12">
+        <div id="product-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+            <!-- Items rendered via JS -->
+        </div>
+    </main>
+
+    <!-- Shopping Cart Modal (Draf Pesanan) -->
+    <div id="cart-modal" class="fixed inset-0 z-[60] bg-[#064e3b]/80 hidden items-end justify-center">
+        <div class="bg-white text-gray-800 w-full max-w-lg rounded-t-[2.5rem] overflow-hidden shadow-2xl animate-slide-up">
+            <div class="bg-[#064e3b] p-6 text-white flex justify-between items-center border-b-4 border-[#fbbf24]">
+                <div>
+                    <h2 class="text-xl font-extrabold italic tracking-tight uppercase">Draf Pesanan</h2>
+                    <p class="text-[10px] text-[#fbbf24] font-bold uppercase tracking-wider">Senarai kuantiti untuk sebut harga</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button onclick="clearCart()" class="bg-red-600 text-white text-[10px] font-black px-3 py-1.5 rounded-lg hover:bg-red-700 transition-colors shadow-lg active:scale-90">PADAM SEMUA</button>
+                    <button onclick="toggleCart()" class="text-[#fbbf24]/80 hover:text-[#fbbf24] text-3xl">&times;</button>
+                </div>
+            </div>
+            
+            <div id="cart-items" class="max-h-[45vh] overflow-y-auto p-6 space-y-4">
+                <!-- Cart items here -->
+            </div>
+
+            <div class="p-6 border-t border-gray-100 bg-gray-50">
+                <div class="flex justify-between items-center mb-6">
+                    <span class="text-gray-400 font-bold text-sm uppercase tracking-widest">Jumlah Keseluruhan:</span>
+                    <span id="cart-total-qty" class="text-2xl font-black text-[#064e3b]">0 Unit</span>
+                </div>
+                <button onclick="checkout()" class="w-full bg-[#25D366] hover:bg-[#1ebc57] text-white py-5 rounded-2xl font-black text-lg shadow-xl flex items-center justify-center gap-3 active:scale-95 transition-all">
+                    <span>Hantar Senarai Ke WhatsApp</span>
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="image-lightbox" class="fixed inset-0 z-[100] bg-black/95 hidden items-center justify-center p-4" onclick="closeLightbox()">
+        <img id="lightbox-img" src="" class="max-w-full max-h-[85vh] rounded-lg shadow-2xl border-2 border-[#fbbf24]">
+    </div>
+
+    <div id="video-lightbox" class="fixed inset-0 z-[100] bg-black/95 hidden items-center justify-center p-4" onclick="closeVideo()">
+        <div class="relative w-full max-w-2xl aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl border-2 border-[#fbbf24]" onclick="event.stopPropagation()">
+            <video id="product-video" controls playsinline class="w-full h-full"></video>
+            <button class="absolute top-3 right-3 bg-red-600 text-white w-8 h-8 rounded-full text-xl font-bold flex items-center justify-center shadow-lg" onclick="closeVideo()">&times;</button>
+        </div>
+    </div>
+
+    <script>
+        const agents = {
+            'hq': { name: 'Official HQ', phone: '60139853913' }
+        };
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentAgent = agents[urlParams.get('id')] || agents['hq'];
+
+        const products = [
+            { id: 'PM11N', name: 'HAPPY BOOM GLOW OF SUNSET', spec: '60/4/25', category: '手持系列', isSoldOut: false },
+            { id: 'PM22N', name: 'HAPPY BOOM 7" BESI', spec: '40/30/8', category: '手持系列', isSoldOut: false },
+            { id: 'PM33N', name: 'HAPPY BOOM GLORIES (ASAP)', spec: '100/4/50', category: '手持系列', isSoldOut: false },
+            { id: '33', name: 'HAPPY BOOM GLORIES (ASAP BINTANG)', spec: '64/6', category: '手持系列', isSoldOut: false },
+            { id: '33N', name: 'HAPPY BOOM GLORIES (ASAP COLOUR)', spec: '100/2/25', category: '手持系列', isSoldOut: false },
+            { id: 'PM44N', name: 'HAPPY BOOM FOUNTAIN (7" ICE CREAM)', spec: '48/2', category: '花筒系列', isSoldOut: false },
+            { id: 'PM66N', name: 'HAPPY BOOM HAPPINESS FOUNTAIN', spec: '48/2', category: '花筒系列', isSoldOut: false },
+            { id: 'PM77N', name: 'HAPPY BOOM GROUND BOOM FLOWER (GASING BATANG)', spec: '80/30', category: '玩具烟花系列', isSoldOut: false },
+            { id: 'PM88N', name: 'HAPPY BOOM FIREWORK (A)', spec: '72/6', category: '花筒系列', isSoldOut: false },
+            { id: '88', name: 'HAPPY BOOM FIREWORK (FOUNTAIN) (B)', spec: '60/1', category: '花筒系列', isSoldOut: false },
+            { id: 'PM99N', name: 'HAPPY BOOM TOP GUN', spec: '30/12', category: '玩具烟花系列', isSoldOut: false },
+            { id: 'PM1010N_50', name: 'HAPPY BOOM FLOWER CAMELIA FLOWER 50', spec: '50/12/12', category: '玩具烟花系列', isSoldOut: true },
+            { id: 'PM1010N_40', name: 'HAPPY BOOM FLOWER CAMELIA FLOWER 40', spec: '40/12/12', category: '玩具烟花系列', isSoldOut: false },
+            { id: 'PM1111N', name: 'HAPPY BOOM DUSH 20 (ROMAN CANDLE)', spec: '48/12', category: '吐珠/火箭系列', isSoldOut: false },
+            { id: 'PM1212N', name: 'HAPPY BOOM PILI CRACKER (TELUR NAGA)', spec: '72/12/12', category: '玩具烟花系列', isSoldOut: false },
+            { id: 'PM1313N', name: 'HAPPY BOOM (8FT) RED CRACKER', spec: '40/1', category: '传统鞭炮', isSoldOut: false },
+            { id: '1313', name: 'HAPPY BOOM 8 FEET RED CRACKER (ROSE)', spec: '40/1', category: '传统鞭炮', isSoldOut: false },
+            { id: '50k', name: 'HAPPY BOOM (150000) RED CRACKER', spec: '4/1', category: '传统鞭炮', isSoldOut: false },
+            { id: 'PM1515N', name: 'HAPPY BOOM (38 FT) SPECIAL RED CRACKER', spec: '6/1', category: '传统鞭炮', isSoldOut: false },
+            { id: '1515N', name: 'HAPPY BOOM (38 FT) RED CRACKER (GOLD)', spec: '6/1', category: '传统鞭炮', isSoldOut: false },
+            { id: '1515', name: 'HAPPY BOOM (38FT) RED & GOLD CRACKER', spec: '6/1', category: '传统鞭炮', isSoldOut: false },
+            { id: '1515VIP', name: 'HAPPY BOOM (108 FT) ROSE RED CRACKER', spec: '3/1', category: '传统鞭炮', isSoldOut: false },
+            { id: 'PM1717N', name: 'ASSORTED CELEBRATION CAKE REPEATER (4" 49 SHOT)', spec: '16/1', category: '盆花/大组合', isSoldOut: false },
+            { id: 'PM2323N', name: 'HAPPY BOOM SHOOT CAKE (4" 16 SHOT)', spec: '48/1', category: '盆花/大组合', isSoldOut: false },
+            { id: 'PM2424N', name: 'HAPPY BOOM SHOOT CAKE (4" 36 SHOT)', spec: '16/1', category: '盆花/大组合', isSoldOut: false },
+            { id: '2424N', name: 'HAPPY BOOM SHOOT CAKES (100 SHOT)', spec: '40/1', category: '盆花/大组合', isSoldOut: false },
+            { id: 'PM2525N', name: 'HAPPY BOOM 18" BESI', spec: '20/20/6', category: '手持系列', isSoldOut: false },
+            { id: '2525', name: 'HAPPY BOOM COLOUR SUN SPARKLE 18"', spec: '20/20/6', category: '手持系列', isSoldOut: false },
+            { id: 'PM2626N', name: 'HAPPY BOOM DUSH 30 (ROMAN CANDLE)', spec: '36/12', category: '吐珠/火箭系列', isSoldOut: false },
+            { id: 'PM2727N', name: 'HAPPY BOOM TIKUS 50 (50 MISILES)', spec: '30/2', category: '花筒系列', isSoldOut: false },
+            { id: 'PM2828N', name: 'HAPPY BOOM BEE', spec: '3/100/12', category: '玩具烟花系列', isSoldOut: false },
+            { id: 'PM3030N', name: 'HAPPY BOOM UFO (TOP GUN UFO)', spec: '60/12', category: '玩具烟花系列', isSoldOut: false },
+            { id: '3030N', name: 'HAPPY BOOM TOP GUN (UFO)', spec: '36/4', category: '玩具烟花系列', isSoldOut: false },
+            { id: '3030', name: 'HAPPY BOOM UFO 12 IN 1 (JELLYFISH)', spec: '20/12', category: '玩具烟花系列', isSoldOut: false },
+            { id: 'PM3232N', name: 'HAPPY BOOM PILI CRACKER (NAGA 3 MINUTES)', spec: '60/6', category: '玩具烟花系列', isSoldOut: false },
+            { id: 'PM3434N', name: 'HAPPY BOOM MANCIS', spec: '60/60/10', category: '传统鞭炮', isSoldOut: false },
+            { id: 'PM3636N', name: 'HAPPY BOOM 14" BESI', spec: '20/20/8', category: '手持系列', isSoldOut: false },
+            { id: 'PM3737N', name: 'HAPPY BOOM THUNDER CLAP (ROCKETS)', spec: '30/20/3', category: '吐珠/火箭系列', isSoldOut: false },
+            { id: '3737', name: 'HAPPY BOOM THUNDER CLAP (SPECIAL ROCKETS)', spec: '30/6', category: '吐珠/火箭系列', isSoldOut: false },
+            { id: 'PM3838N', name: 'HAPPY BOOM CILI PADI', spec: '300/10/26', category: '传统鞭炮', isSoldOut: false },
+            { id: 'PM3939N', name: 'HAPPY BOOM SUNSET BESAR', spec: '40/2/50', category: '手持系列', isSoldOut: false },
+            { id: 'PM4040N', name: 'HAPPY BOOM BANANA HUJAN (A)', spec: '24/6', category: '单发系列', isSoldOut: false },
+            { id: '4040', name: 'HAPPY BOOM BANANA HUJAN (B) (3 SHOT)', spec: '18/3', category: '单发系列', isSoldOut: false },
+            { id: 'PM4141N', name: 'HAPPY BOOM MOON TRAVER (ROCKETS)', spec: '36/12/12', category: '吐珠/火箭系列', isSoldOut: false },
+            { id: 'PM4242N', name: 'HAPPY BOOM BANANA KECIL', spec: '60/6', category: '单发系列', isSoldOut: false },
+            { id: 'PM4444N', name: 'HAPPY BOOM 10 SHOOTS (DUSH NAGA)', spec: '40/6', category: '吐珠/火箭系列', isSoldOut: false },
+            { id: 'PM4545N', name: 'HAPPY BOOM 10"ICE CREAM (FOUNTAIN)', spec: '10/2', category: '花筒系列', isSoldOut: false },
+            { id: 'PM4646N', name: 'HAPPY BOOM SHOOT CAKE (4" 25 SHOT)', spec: '24/1', category: '盆花/大组合', isSoldOut: false },
+            { id: 'PM4747N', name: 'HAPPY BOOM 8 SHOOTS ROMAN CANDLE', spec: '24/4', category: '吐珠/火箭系列', isSoldOut: false },
+            { id: 'PM4848N', name: 'HAPPY BOOM 15" ICE CREAM (FOUNTAIN)', spec: '6/2', category: '花筒系列', isSoldOut: false },
+            { id: '4138*', name: 'SHOOT CAKE (4" 138 SHOT)', spec: '6/1', category: '盆花/大组合', isSoldOut: false },
+            { id: '4168*', name: 'SHOOT CAKE (4" 168 SHOT)', spec: '4/1', category: '盆花/大组合', isSoldOut: false },
+            { id: 'V4168*', name: 'VIP SHOOT CAKE (4" 168 SHOT)', spec: '5/1', category: '盆花/大组合', isSoldOut: false },
+            { id: '4228*', name: 'SHOOT CAKE (4" 228 SHOT)', spec: '3/1', category: '盆花/大组合', isSoldOut: false },
+            { id: 'JL933', name: 'HAPPY BOOM DUSH 15 (ROMAN CANDLE)', spec: '80/12', category: '吐珠/火箭系列', isSoldOut: false },
+            { id: 'JL944', name: 'HAPPY BOOM 8 SHOOTS ROMAN CANDLE', spec: '40/3', category: '吐珠/火箭系列', isSoldOut: false },
+            { id: 'JL988_MT', name: 'FOUNTAIN MONEY TREE', spec: '40/4', category: '花筒系列', isSoldOut: false },
+            { id: 'JL988', name: 'FOUNTAIN TRIANGLE FORTUNE (3 SEGI)', spec: '40/1', category: '花筒系列', isSoldOut: false },
+            { id: 'JL9955', name: 'FOUNTAIN PEACOCK (5 CONE)', spec: '24/1', category: '花筒系列', isSoldOut: false },
+            { id: 'JL9966_F', name: 'FLYING FOUNTAIN', spec: '36/1', category: '盆花/大组合', isSoldOut: false },
+            { id: 'JL988_MD', name: 'PEARL BURST', spec: '60/10', category: '花筒系列', isSoldOut: false },
+            { id: 'JL988_HX', name: 'FOUNTAIN HEXA RADIANCE', spec: '60/1', category: '花筒系列', isSoldOut: false },
+            { id: 'JL9911', name: '3" MINI ICE CREAM', spec: '72/6', category: '花筒系列', isSoldOut: false },
+            { id: 'JL11_4', name: 'HAPPY BOOM SUNSET 4 COLOUR', spec: '30/6/20', category: '手持系列', isSoldOut: false },
+            { id: 'JL9966_K', name: 'HAPPY BOOM SUNSET KIPAS', spec: '12/2', category: '手持系列', isSoldOut: false },
+            { id: 'JL9500', name: 'POP POP COLOUR', spec: '12/50/35', category: '玩具烟花系列', isSoldOut: false },
+            { id: 'JL9500_B', name: 'POP POP COLOUR (BIG)', spec: '12/40/20', category: '玩具烟花系列', isSoldOut: false },
+            { id: 'JL9500_T', name: 'THUNDER POP POP', spec: '12/12/20', category: '玩具烟花系列', isSoldOut: false },
+            { id: 'JL88_B', name: 'HAPPY BOOM PILI CRACKER (NAGA 3 MINUTES BESAR)', spec: '32/4', category: '玩具烟花系列', isSoldOut: false },
+            { id: 'PM1212N_B', name: 'HAPPY BOOM PILI CRACKER (TELUR NAGA BESAR)', spec: '36/24/6', category: '玩具烟花系列', isSoldOut: false }
+        ];
+
+        let cart = {};
+
+        function handleImageError(img, pureId, id) {
+            if (img.src.includes('.jpg')) {
+                img.src = `images/${pureId}.png`;
+            } else if (img.src.includes('.png')) {
+                img.onerror = null;
+                img.src = `https://placehold.co/400x400/064e3b/fbbf24?text=${id}`;
+            }
+        }
+
+        function renderProducts(catFilter = 'all') {
+            const grid = document.getElementById('product-grid');
+            grid.innerHTML = '';
+            const filtered = catFilter === 'all' ? products : products.filter(p => p.category === catFilter);
+
+            filtered.forEach(p => {
+                const pureId = p.id.split('-')[0].replace('*', '');
+                const imgPath = `images/${pureId}.jpg`;
+                const videoPath = `videos/${pureId}.mp4`;
+                const card = document.createElement('div');
+                card.className = `product-card raya-card rounded-2xl overflow-hidden shadow-lg flex flex-col transition-all relative ${p.isSoldOut ? 'opacity-75 grayscale-[0.3]' : ''}`;
+                
+                card.innerHTML = `
+                    <div class="aspect-square bg-gray-50 flex items-center justify-center relative overflow-hidden group">
+                        <img src="${imgPath}" onclick="${p.isSoldOut ? '' : `openLightbox(this.src)`}" class="w-full h-full object-cover ${p.isSoldOut ? 'cursor-default' : 'cursor-zoom-in'}" onerror="handleImageError(this, '${pureId}', '${p.id}')">
+                        ${p.isSoldOut ? `<div class="absolute inset-0 sold-out-overlay flex items-center justify-center z-10"><span class="border-4 border-[#fbbf24] text-[#fbbf24] font-black text-lg px-3 py-1 rotate-[-15deg] uppercase tracking-widest">HABIS STOK</span></div>` : ''}
+                        <button onclick="openVideo('${videoPath}')" class="absolute bottom-2 right-2 bg-[#064e3b]/80 text-[#fbbf24] p-2 rounded-full shadow-lg flex items-center gap-1 scale-90">
+                            <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16"><path d="M11.596 8.697l-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/></svg>
+                            <span class="text-[9px] font-bold">Video</span>
+                        </button>
+                    </div>
+                    <div class="p-3 flex-1 flex flex-col">
+                        <p class="text-[#064e3b] font-black text-[9px] tracking-tighter opacity-60 uppercase">${p.id}</p>
+                        <h3 class="text-gray-800 text-[11px] font-extrabold h-8 line-clamp-2 leading-tight">${p.name}</h3>
+                        <p class="text-gray-400 text-[10px] mt-1 italic">${p.spec}</p>
+                        
+                        <div class="mt-auto pt-3">
+                            <div class="flex items-center justify-between border-2 border-gray-100 rounded-xl h-9 mb-2 bg-gray-50 overflow-hidden ${p.isSoldOut ? 'opacity-30' : ''}">
+                                <button ${p.isSoldOut ? 'disabled' : `onclick="changeProductQty('${p.id}', -1)"`} class="w-10 h-full font-bold text-gray-400 hover:bg-gray-200">-</button>
+                                <input id="qty-${p.id}" type="number" value="1" min="1" readonly class="w-10 text-center text-xs font-black bg-transparent text-gray-800">
+                                <button ${p.isSoldOut ? 'disabled' : `onclick="changeProductQty('${p.id}', 1)"`} class="w-10 h-full font-bold text-gray-400 hover:bg-gray-200">+</button>
+                            </div>
+                            <button ${p.isSoldOut ? 'disabled' : `onclick="addToCart('${p.id}')"`} class="w-full ${p.isSoldOut ? 'bg-gray-300' : 'bg-[#064e3b] hover:bg-[#065f46]'} text-white py-2 rounded-xl text-xs font-black active:scale-95 transition-all shadow-md">
+                                ${p.isSoldOut ? 'STOK HABIS' : 'Tambah Pesanan'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function changeProductQty(id, delta) {
+            const input = document.getElementById(`qty-${id}`);
+            if (input) input.value = Math.max(1, (parseInt(input.value) || 1) + delta);
+        }
+
+        function addToCart(id) {
+            const product = products.find(p => p.id === id);
+            if (!product || product.isSoldOut) return;
+            const qtyInput = document.getElementById(`qty-${id}`);
+            const qty = parseInt(qtyInput.value) || 1;
+            
+            if (cart[id]) { 
+                cart[id].qty += qty; 
+            } else { 
+                cart[id] = { name: product.name, qty: qty, displayId: product.id }; 
+            }
+            
+            qtyInput.value = 1;
+            updateCart();
+            const countLabel = document.getElementById('cart-count');
+            countLabel.classList.add('scale-150');
+            setTimeout(() => countLabel.classList.remove('scale-150'), 200);
+        }
+
+        function updateCart() {
+            const count = Object.values(cart).reduce((a, b) => a + b.qty, 0);
+            document.getElementById('cart-count').innerText = count;
+            document.getElementById('cart-total-qty').innerText = `${count} Unit/Box`;
+            renderCartItems();
+        }
+
+        function renderCartItems() {
+            const container = document.getElementById('cart-items');
+            const keys = Object.keys(cart);
+            if (keys.length === 0) {
+                container.innerHTML = `<div class="text-center py-10"><span class="text-4xl">🛒</span><p class="text-gray-400 font-bold mt-2">Draf pesanan kosong</p></div>`;
+                return;
+            }
+            container.innerHTML = keys.map(id => `
+                <div class="flex justify-between items-center border-b pb-4 border-gray-100">
+                    <div class="flex-1 text-left">
+                        <span class="text-[#064e3b] font-black text-[10px] uppercase">[${cart[id].displayId}]</span>
+                        <h4 class="text-[12px] font-bold text-gray-800 leading-tight">${cart[id].name}</h4>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="flex items-center border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm h-8">
+                            <button onclick="updateCartItemQty('${id}', -1)" class="px-2.5 text-gray-400 hover:bg-gray-100 font-bold transition-colors">-</button>
+                            <span class="px-3 text-xs font-black text-[#064e3b] min-w-[20px] text-center">${cart[id].qty}</span>
+                            <button onclick="updateCartItemQty('${id}', 1)" class="px-2.5 text-gray-400 hover:bg-gray-100 font-bold transition-colors">+</button>
+                        </div>
+                        <button onclick="deleteFromCart('${id}')" class="text-red-300 hover:text-red-600 text-2xl ml-1">&times;</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateCartItemQty(id, delta) {
+            if (cart[id]) {
+                cart[id].qty = Math.max(1, cart[id].qty + delta);
+                updateCart();
+            }
+        }
+
+        function deleteFromCart(id) { delete cart[id]; updateCart(); }
+
+        function clearCart() { cart = {}; updateCart(); }
+
+        function filterProducts(cat) {
+            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+            if(event) event.currentTarget.classList.add('active');
+            renderProducts(cat);
+        }
+
+        function toggleCart() {
+            const modal = document.getElementById('cart-modal');
+            modal.classList.toggle('hidden'); modal.classList.toggle('flex');
+        }
+
+        function openLightbox(src) { document.getElementById('lightbox-img').src = src; document.getElementById('image-lightbox').classList.replace('hidden', 'flex'); }
+        function closeLightbox() { document.getElementById('image-lightbox').classList.replace('flex', 'hidden'); }
+
+        function openVideo(src) {
+            const v = document.getElementById('product-video'); v.src = src;
+            document.getElementById('video-lightbox').classList.replace('hidden', 'flex'); v.play();
+        }
+        function closeVideo() {
+            const v = document.getElementById('product-video'); v.pause(); v.src = "";
+            document.getElementById('video-lightbox').classList.replace('hidden', 'flex');
+        }
+
+        function checkout() {
+            const keys = Object.keys(cart);
+            if (keys.length === 0) return;
+            let totalQty = 0;
+            let msg = `🌙 *TEMPAHAN BORONG RAYA 2026* 🌙\n`;
+            msg += `🙋‍♂️ *Agent:* [Sila Tulis Nama Anda]\n`;
+            msg += `----------------------------\n`;
+            keys.forEach((id, i) => {
+                const item = cart[id];
+                totalQty += item.qty;
+                msg += `${i+1}. *[${item.displayId}]* ${item.name}\n   👉 Kuantiti: *${item.qty} Unit*\n`;
+            });
+            msg += `----------------------------\n`;
+            msg += `📦 *Jumlah Keseluruhan: ${totalQty} Unit*\n`;
+            msg += `----------------------------\n`;
+            msg += `Boss, sila berikan sebut harga (Quotation). Terima kasih! ✨`;
+            window.open(`https://wa.me/${currentAgent.phone}?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        window.onload = () => renderProducts();
+    </script>
+</body>
+</html>
