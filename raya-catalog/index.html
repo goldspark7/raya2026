@@ -251,7 +251,7 @@
                         <div class="mt-auto pt-3">
                             <div class="flex items-center justify-between border-2 border-gray-100 rounded-xl h-9 mb-2 bg-gray-50 overflow-hidden ${p.isSoldOut ? 'opacity-30' : ''}">
                                 <button ${p.isSoldOut ? 'disabled' : `onclick="changeProductQty('${p.id}', -1)"`} class="w-10 h-full font-bold text-gray-400 hover:bg-gray-200">-</button>
-                                <input id="qty-${p.id}" type="number" value="1" min="1" readonly class="w-10 text-center text-xs font-black bg-transparent text-gray-800">
+                                <input id="qty-${p.id}" type="number" value="1" min="1" readonly class="w-10 text-center text-xs font-black bg-transparent text-gray-800 focus:outline-none">
                                 <button ${p.isSoldOut ? 'disabled' : `onclick="changeProductQty('${p.id}', 1)"`} class="w-10 h-full font-bold text-gray-400 hover:bg-gray-200">+</button>
                             </div>
                             <button ${p.isSoldOut ? 'disabled' : `onclick="addToCart('${p.id}')"`} class="w-full ${p.isSoldOut ? 'bg-gray-300' : 'bg-[#064e3b] hover:bg-[#065f46]'} text-white py-2 rounded-xl text-xs font-black active:scale-95 transition-all shadow-md">
@@ -342,16 +342,27 @@
             modal.classList.toggle('hidden'); modal.classList.toggle('flex');
         }
 
-        function openLightbox(src) { document.getElementById('lightbox-img').src = src; document.getElementById('image-lightbox').classList.replace('hidden', 'flex'); }
-        function closeLightbox() { document.getElementById('image-lightbox').classList.replace('flex', 'hidden'); }
+        function openLightbox(src) { 
+            document.getElementById('lightbox-img').src = src; 
+            document.getElementById('image-lightbox').classList.replace('hidden', 'flex'); 
+        }
+        function closeLightbox() { 
+            document.getElementById('image-lightbox').classList.replace('flex', 'hidden'); 
+        }
 
         function openVideo(src) {
-            const v = document.getElementById('product-video'); v.src = src;
-            document.getElementById('video-lightbox').classList.replace('hidden', 'flex'); v.play();
+            const v = document.getElementById('product-video'); 
+            v.src = src;
+            document.getElementById('video-lightbox').classList.replace('hidden', 'flex'); 
+            v.play().catch(e => console.log("Video not found"));
         }
+        
+        // FIXED: Now correctly hides the lightbox
         function closeVideo() {
-            const v = document.getElementById('product-video'); v.pause(); v.src = "";
-            document.getElementById('video-lightbox').classList.replace('hidden', 'flex');
+            const v = document.getElementById('product-video'); 
+            v.pause(); 
+            v.src = "";
+            document.getElementById('video-lightbox').classList.replace('flex', 'hidden');
         }
 
         function checkout() {
