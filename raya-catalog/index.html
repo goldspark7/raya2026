@@ -9,7 +9,7 @@
     <style>
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #064e3b; /* Deep Raya Green */
+            background-color: #064e3b; 
             background-image: radial-gradient(#fbbf24 0.5px, transparent 0.5px), radial-gradient(#fbbf24 0.5px, #064e3b 0.5px);
             background-size: 30px 30px;
             background-position: 0 0, 15px 15px;
@@ -82,12 +82,10 @@
 
     <!-- Product Grid -->
     <main class="container mx-auto px-4 pb-12">
-        <div id="product-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-            <!-- Items rendered via JS -->
-        </div>
+        <div id="product-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"></div>
     </main>
 
-    <!-- Shopping Cart Modal (Draf Pesanan) -->
+    <!-- Shopping Cart Modal -->
     <div id="cart-modal" class="fixed inset-0 z-[60] bg-[#064e3b]/80 hidden items-end justify-center">
         <div class="bg-white text-gray-800 w-full max-w-lg rounded-t-[2.5rem] overflow-hidden shadow-2xl animate-slide-up">
             <div class="bg-[#064e3b] p-6 text-white flex justify-between items-center border-b-4 border-[#fbbf24]">
@@ -100,11 +98,7 @@
                     <button onclick="toggleCart()" class="text-[#fbbf24]/80 hover:text-[#fbbf24] text-3xl">&times;</button>
                 </div>
             </div>
-            
-            <div id="cart-items" class="max-h-[45vh] overflow-y-auto p-6 space-y-4">
-                <!-- Cart items here -->
-            </div>
-
+            <div id="cart-items" class="max-h-[45vh] overflow-y-auto p-6 space-y-4"></div>
             <div class="p-6 border-t border-gray-100 bg-gray-50">
                 <div class="flex justify-between items-center mb-6">
                     <span class="text-gray-400 font-bold text-sm uppercase tracking-widest">Jumlah Keseluruhan:</span>
@@ -123,9 +117,11 @@
         <img id="lightbox-img" src="" class="max-w-full max-h-[85vh] rounded-lg shadow-2xl border-2 border-[#fbbf24]">
     </div>
 
+    <!-- UPDATED: YouTube Video Modal -->
     <div id="video-lightbox" class="fixed inset-0 z-[100] bg-black/95 hidden items-center justify-center p-4" onclick="closeVideo()">
         <div class="relative w-full max-w-2xl aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl border-2 border-[#fbbf24]" onclick="event.stopPropagation()">
-            <video id="product-video" controls playsinline class="w-full h-full"></video>
+            <!-- Use IFrame for YouTube -->
+            <iframe id="youtube-player" class="w-full h-full" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             <button class="absolute top-3 right-3 bg-red-600 text-white w-8 h-8 rounded-full text-xl font-bold flex items-center justify-center shadow-lg" onclick="closeVideo()">&times;</button>
         </div>
     </div>
@@ -138,77 +134,78 @@
         const urlParams = new URLSearchParams(window.location.search);
         const currentAgent = agents[urlParams.get('id')] || agents['hq'];
 
+        // TIP: Sila masukkan YouTube Video ID (contoh: dQw4w9WgXcQ) di dalam youtubeId
         const products = [
-            { id: 'PM11N', name: 'HAPPY BOOM GLOW OF SUNSET', spec: '60/4/25', category: '手持系列', isSoldOut: false },
-            { id: 'PM22N', name: 'HAPPY BOOM 7" BESI', spec: '40/30/8', category: '手持系列', isSoldOut: false },
-            { id: 'PM33N', name: 'HAPPY BOOM GLORIES (ASAP)', spec: '100/4/50', category: '手持系列', isSoldOut: false },
-            { id: '33', name: 'HAPPY BOOM GLORIES (ASAP BINTANG)', spec: '64/6', category: '手持系列', isSoldOut: false },
-            { id: '33N', name: 'HAPPY BOOM GLORIES (ASAP COLOUR)', spec: '100/2/25', category: '手持系列', isSoldOut: false },
-            { id: 'PM44N', name: 'HAPPY BOOM FOUNTAIN (7" ICE CREAM)', spec: '48/2', category: '花筒系列', isSoldOut: false },
-            { id: 'PM66N', name: 'HAPPY BOOM HAPPINESS FOUNTAIN', spec: '48/2', category: '花筒系列', isSoldOut: false },
-            { id: 'PM77N', name: 'HAPPY BOOM GROUND BOOM FLOWER (GASING BATANG)', spec: '80/30', category: '玩具烟花系列', isSoldOut: false },
-            { id: 'PM88N', name: 'HAPPY BOOM FIREWORK (A)', spec: '72/6', category: '花筒系列', isSoldOut: false },
-            { id: '88', name: 'HAPPY BOOM FIREWORK (FOUNTAIN) (B)', spec: '60/1', category: '花筒系列', isSoldOut: false },
-            { id: 'PM99N', name: 'HAPPY BOOM TOP GUN', spec: '30/12', category: '玩具烟花系列', isSoldOut: false },
-            { id: 'PM1010N_50', name: 'HAPPY BOOM FLOWER CAMELIA FLOWER 50', spec: '50/12/12', category: '玩具烟花系列', isSoldOut: true },
-            { id: 'PM1010N_40', name: 'HAPPY BOOM FLOWER CAMELIA FLOWER 40', spec: '40/12/12', category: '玩具烟花系列', isSoldOut: false },
-            { id: 'PM1111N', name: 'HAPPY BOOM DUSH 20 (ROMAN CANDLE)', spec: '48/12', category: '吐珠/火箭系列', isSoldOut: false },
-            { id: 'PM1212N', name: 'HAPPY BOOM PILI CRACKER (TELUR NAGA)', spec: '72/12/12', category: '玩具烟花系列', isSoldOut: false },
-            { id: 'PM1313N', name: 'HAPPY BOOM (8FT) RED CRACKER', spec: '40/1', category: '传统鞭炮', isSoldOut: false },
-            { id: '1313', name: 'HAPPY BOOM 8 FEET RED CRACKER (ROSE)', spec: '40/1', category: '传统鞭炮', isSoldOut: false },
-            { id: '50k', name: 'HAPPY BOOM (150000) RED CRACKER', spec: '4/1', category: '传统鞭炮', isSoldOut: false },
-            { id: 'PM1515N', name: 'HAPPY BOOM (38 FT) SPECIAL RED CRACKER', spec: '6/1', category: '传统鞭炮', isSoldOut: false },
-            { id: '1515N', name: 'HAPPY BOOM (38 FT) RED CRACKER (GOLD)', spec: '6/1', category: '传统鞭炮', isSoldOut: false },
-            { id: '1515', name: 'HAPPY BOOM (38FT) RED & GOLD CRACKER', spec: '6/1', category: '传统鞭炮', isSoldOut: false },
-            { id: '1515VIP', name: 'HAPPY BOOM (108 FT) ROSE RED CRACKER', spec: '3/1', category: '传统鞭炮', isSoldOut: false },
-            { id: 'PM1717N', name: 'ASSORTED CELEBRATION CAKE REPEATER (4" 49 SHOT)', spec: '16/1', category: '盆花/大组合', isSoldOut: false },
-            { id: 'PM2323N', name: 'HAPPY BOOM SHOOT CAKE (4" 16 SHOT)', spec: '48/1', category: '盆花/大组合', isSoldOut: false },
-            { id: 'PM2424N', name: 'HAPPY BOOM SHOOT CAKE (4" 36 SHOT)', spec: '16/1', category: '盆花/大组合', isSoldOut: false },
-            { id: '2424N', name: 'HAPPY BOOM SHOOT CAKES (100 SHOT)', spec: '40/1', category: '盆花/大组合', isSoldOut: false },
-            { id: 'PM2525N', name: 'HAPPY BOOM 18" BESI', spec: '20/20/6', category: '手持系列', isSoldOut: false },
-            { id: '2525', name: 'HAPPY BOOM COLOUR SUN SPARKLE 18"', spec: '20/20/6', category: '手持系列', isSoldOut: false },
-            { id: 'PM2626N', name: 'HAPPY BOOM DUSH 30 (ROMAN CANDLE)', spec: '36/12', category: '吐珠/火箭系列', isSoldOut: false },
-            { id: 'PM2727N', name: 'HAPPY BOOM TIKUS 50 (50 MISILES)', spec: '30/2', category: '花筒系列', isSoldOut: false },
-            { id: 'PM2828N', name: 'HAPPY BOOM BEE', spec: '3/100/12', category: '玩具烟花系列', isSoldOut: false },
-            { id: 'PM3030N', name: 'HAPPY BOOM UFO (TOP GUN UFO)', spec: '60/12', category: '玩具烟花系列', isSoldOut: false },
-            { id: '3030N', name: 'HAPPY BOOM TOP GUN (UFO)', spec: '36/4', category: '玩具烟花系列', isSoldOut: false },
-            { id: '3030', name: 'HAPPY BOOM UFO 12 IN 1 (JELLYFISH)', spec: '20/12', category: '玩具烟花系列', isSoldOut: false },
-            { id: 'PM3232N', name: 'HAPPY BOOM PILI CRACKER (NAGA 3 MINUTES)', spec: '60/6', category: '玩具烟花系列', isSoldOut: false },
-            { id: 'PM3434N', name: 'HAPPY BOOM MANCIS', spec: '60/60/10', category: '传统鞭炮', isSoldOut: false },
-            { id: 'PM3636N', name: 'HAPPY BOOM 14" BESI', spec: '20/20/8', category: '手持系列', isSoldOut: false },
-            { id: 'PM3737N', name: 'HAPPY BOOM THUNDER CLAP (ROCKETS)', spec: '30/20/3', category: '吐珠/火箭系列', isSoldOut: false },
-            { id: '3737', name: 'HAPPY BOOM THUNDER CLAP (SPECIAL ROCKETS)', spec: '30/6', category: '吐珠/火箭系列', isSoldOut: false },
-            { id: 'PM3838N', name: 'HAPPY BOOM CILI PADI', spec: '300/10/26', category: '传统鞭炮', isSoldOut: false },
-            { id: 'PM3939N', name: 'HAPPY BOOM SUNSET BESAR', spec: '40/2/50', category: '手持系列', isSoldOut: false },
-            { id: 'PM4040N', name: 'HAPPY BOOM BANANA HUJAN (A)', spec: '24/6', category: '单发系列', isSoldOut: false },
-            { id: '4040', name: 'HAPPY BOOM BANANA HUJAN (B) (3 SHOT)', spec: '18/3', category: '单发系列', isSoldOut: false },
-            { id: 'PM4141N', name: 'HAPPY BOOM MOON TRAVER (ROCKETS)', spec: '36/12/12', category: '吐珠/火箭系列', isSoldOut: false },
-            { id: 'PM4242N', name: 'HAPPY BOOM BANANA KECIL', spec: '60/6', category: '单发系列', isSoldOut: false },
-            { id: 'PM4444N', name: 'HAPPY BOOM 10 SHOOTS (DUSH NAGA)', spec: '40/6', category: '吐珠/火箭系列', isSoldOut: false },
-            { id: 'PM4545N', name: 'HAPPY BOOM 10"ICE CREAM (FOUNTAIN)', spec: '10/2', category: '花筒系列', isSoldOut: false },
-            { id: 'PM4646N', name: 'HAPPY BOOM SHOOT CAKE (4" 25 SHOT)', spec: '24/1', category: '盆花/大组合', isSoldOut: false },
-            { id: 'PM4747N', name: 'HAPPY BOOM 8 SHOOTS ROMAN CANDLE', spec: '24/4', category: '吐珠/火箭系列', isSoldOut: false },
-            { id: 'PM4848N', name: 'HAPPY BOOM 15" ICE CREAM (FOUNTAIN)', spec: '6/2', category: '花筒系列', isSoldOut: false },
-            { id: '4138*', name: 'SHOOT CAKE (4" 138 SHOT)', spec: '6/1', category: '盆花/大组合', isSoldOut: false },
-            { id: '4168*', name: 'SHOOT CAKE (4" 168 SHOT)', spec: '4/1', category: '盆花/大组合', isSoldOut: false },
-            { id: 'V4168*', name: 'VIP SHOOT CAKE (4" 168 SHOT)', spec: '5/1', category: '盆花/大组合', isSoldOut: false },
-            { id: '4228*', name: 'SHOOT CAKE (4" 228 SHOT)', spec: '3/1', category: '盆花/大组合', isSoldOut: false },
-            { id: 'JL933', name: 'HAPPY BOOM DUSH 15 (ROMAN CANDLE)', spec: '80/12', category: '吐珠/火箭系列', isSoldOut: false },
-            { id: 'JL944', name: 'HAPPY BOOM 8 SHOOTS ROMAN CANDLE', spec: '40/3', category: '吐珠/火箭系列', isSoldOut: false },
-            { id: 'JL988_MT', name: 'FOUNTAIN MONEY TREE', spec: '40/4', category: '花筒系列', isSoldOut: false },
-            { id: 'JL988', name: 'FOUNTAIN TRIANGLE FORTUNE (3 SEGI)', spec: '40/1', category: '花筒系列', isSoldOut: false },
-            { id: 'JL9955', name: 'FOUNTAIN PEACOCK (5 CONE)', spec: '24/1', category: '花筒系列', isSoldOut: false },
-            { id: 'JL9966_F', name: 'FLYING FOUNTAIN', spec: '36/1', category: '盆花/大组合', isSoldOut: false },
-            { id: 'JL988_MD', name: 'PEARL BURST', spec: '60/10', category: '花筒系列', isSoldOut: false },
-            { id: 'JL988_HX', name: 'FOUNTAIN HEXA RADIANCE', spec: '60/1', category: '花筒系列', isSoldOut: false },
-            { id: 'JL9911', name: '3" MINI ICE CREAM', spec: '72/6', category: '花筒系列', isSoldOut: false },
-            { id: 'JL11_4', name: 'HAPPY BOOM SUNSET 4 COLOUR', spec: '30/6/20', category: '手持系列', isSoldOut: false },
-            { id: 'JL9966_K', name: 'HAPPY BOOM SUNSET KIPAS', spec: '12/2', category: '手持系列', isSoldOut: false },
-            { id: 'JL9500', name: 'POP POP COLOUR', spec: '12/50/35', category: '玩具烟花系列', isSoldOut: false },
-            { id: 'JL9500_B', name: 'POP POP COLOUR (BIG)', spec: '12/40/20', category: '玩具烟花系列', isSoldOut: false },
-            { id: 'JL9500_T', name: 'THUNDER POP POP', spec: '12/12/20', category: '玩具烟花系列', isSoldOut: false },
-            { id: 'JL88_B', name: 'HAPPY BOOM PILI CRACKER (NAGA 3 MINUTES BESAR)', spec: '32/4', category: '玩具烟花系列', isSoldOut: false },
-            { id: 'PM1212N_B', name: 'HAPPY BOOM PILI CRACKER (TELUR NAGA BESAR)', spec: '36/24/6', category: '玩具烟花系列', isSoldOut: false }
+            { id: 'PM11N', name: 'HAPPY BOOM GLOW OF SUNSET', spec: '60/4/25', category: '手持系列', isSoldOut: false, youtubeId: '' },
+            { id: 'PM22N', name: 'HAPPY BOOM 7" BESI', spec: '40/30/8', category: '手持系列', isSoldOut: false, youtubeId: '' },
+            { id: 'PM33N', name: 'HAPPY BOOM GLORIES (ASAP)', spec: '100/4/50', category: '手持系列', isSoldOut: false, youtubeId: '' },
+            { id: '33', name: 'HAPPY BOOM GLORIES (ASAP BINTANG)', spec: '64/6', category: '手持系列', isSoldOut: false, youtubeId: '' },
+            { id: '33N', name: 'HAPPY BOOM GLORIES (ASAP COLOUR)', spec: '100/2/25', category: '手持系列', isSoldOut: false, youtubeId: '' },
+            { id: 'PM44N', name: 'HAPPY BOOM FOUNTAIN (7" ICE CREAM)', spec: '48/2', category: '花筒系列', isSoldOut: false, youtubeId: '' },
+            { id: 'PM66N', name: 'HAPPY BOOM HAPPINESS FOUNTAIN', spec: '48/2', category: '花筒系列', isSoldOut: false, youtubeId: '' },
+            { id: 'PM77N', name: 'HAPPY BOOM GROUND BOOM FLOWER (GASING BATANG)', spec: '80/30', category: '玩具烟花系列', isSoldOut: false, youtubeId: '' },
+            { id: 'PM88N', name: 'HAPPY BOOM FIREWORK (A)', spec: '72/6', category: '花筒系列', isSoldOut: false, youtubeId: '' },
+            { id: '88', name: 'HAPPY BOOM FIREWORK (FOUNTAIN) (B)', spec: '60/1', category: '花筒系列', isSoldOut: false, youtubeId: '' },
+            { id: 'PM99N', name: 'HAPPY BOOM TOP GUN', spec: '30/12', category: '玩具烟花系列', isSoldOut: false, youtubeId: '' },
+            { id: 'PM1010N_50', name: 'HAPPY BOOM FLOWER CAMELIA FLOWER 50', spec: '50/12/12', category: '玩具烟花系列', isSoldOut: true, youtubeId: '' },
+            { id: 'PM1010N_40', name: 'HAPPY BOOM FLOWER CAMELIA FLOWER 40', spec: '40/12/12', category: '玩具烟花系列', isSoldOut: false, youtubeId: '' },
+            { id: 'PM1111N', name: 'HAPPY BOOM DUSH 20 (ROMAN CANDLE)', spec: '48/12', category: '吐珠/火箭系列', isSoldOut: false, youtubeId: '' },
+            { id: 'PM1212N', name: 'HAPPY BOOM PILI CRACKER (TELUR NAGA)', spec: '72/12/12', category: '玩具烟花系列', isSoldOut: false, youtubeId: '' },
+            { id: 'PM1313N', name: 'HAPPY BOOM (8FT) RED CRACKER', spec: '40/1', category: '传统鞭炮', isSoldOut: false, youtubeId: '' },
+            { id: '1313', name: 'HAPPY BOOM 8 FEET RED CRACKER (ROSE)', spec: '40/1', category: '传统鞭炮', isSoldOut: false, youtubeId: '' },
+            { id: '50k', name: 'HAPPY BOOM (150000) RED CRACKER', spec: '4/1', category: '传统鞭炮', isSoldOut: false, youtubeId: '' },
+            { id: 'PM1515N', name: 'HAPPY BOOM (38 FT) SPECIAL RED CRACKER', spec: '6/1', category: '传统鞭炮', isSoldOut: false, youtubeId: '' },
+            { id: '1515N', name: 'HAPPY BOOM (38 FT) RED CRACKER (GOLD)', spec: '6/1', category: '传统鞭炮', isSoldOut: false, youtubeId: '' },
+            { id: '1515', name: 'HAPPY BOOM (38FT) RED & GOLD CRACKER', spec: '6/1', category: '传统鞭炮', isSoldOut: false, youtubeId: '' },
+            { id: '1515VIP', name: 'HAPPY BOOM (108 FT) ROSE RED CRACKER', spec: '3/1', category: '传统鞭炮', isSoldOut: false, youtubeId: '' },
+            { id: 'PM1717N', name: 'ASSORTED CELEBRATION CAKE REPEATER (4" 49 SHOT)', spec: '16/1', category: '盆花/大组合', isSoldOut: false, youtubeId: '' },
+            { id: 'PM2323N', name: 'HAPPY BOOM SHOOT CAKE (4" 16 SHOT)', spec: '48/1', category: '盆花/大组合', isSoldOut: false, youtubeId: '' },
+            { id: 'PM2424N', name: 'HAPPY BOOM SHOOT CAKE (4" 36 SHOT)', spec: '16/1', category: '盆花/大组合', isSoldOut: false, youtubeId: '' },
+            { id: '2424N', name: 'HAPPY BOOM SHOOT CAKES (100 SHOT)', spec: '40/1', category: '盆花/大组合', isSoldOut: false, youtubeId: '' },
+            { id: 'PM2525N', name: 'HAPPY BOOM 18" BESI', spec: '20/20/6', category: '手持系列', isSoldOut: false, youtubeId: '' },
+            { id: '2525', name: 'HAPPY BOOM COLOUR SUN SPARKLE 18"', spec: '20/20/6', category: '手持系列', isSoldOut: false, youtubeId: '' },
+            { id: 'PM2626N', name: 'HAPPY BOOM DUSH 30 (ROMAN CANDLE)', spec: '36/12', category: '吐珠/火箭系列', isSoldOut: false, youtubeId: '' },
+            { id: 'PM2727N', name: 'HAPPY BOOM TIKUS 50 (50 MISILES)', spec: '30/2', category: '花筒系列', isSoldOut: false, youtubeId: '' },
+            { id: 'PM2828N', name: 'HAPPY BOOM BEE', spec: '3/100/12', category: '玩具烟花系列', isSoldOut: false, youtubeId: '' },
+            { id: 'PM3030N', name: 'HAPPY BOOM UFO (TOP GUN UFO)', spec: '60/12', category: '玩具烟花系列', isSoldOut: false, youtubeId: '' },
+            { id: '3030N', name: 'HAPPY BOOM TOP GUN (UFO)', spec: '36/4', category: '玩具烟花系列', isSoldOut: false, youtubeId: '' },
+            { id: '3030', name: 'HAPPY BOOM UFO 12 IN 1 (JELLYFISH)', spec: '20/12', category: '玩具烟花系列', isSoldOut: false, youtubeId: '' },
+            { id: 'PM3232N', name: 'HAPPY BOOM PILI CRACKER (NAGA 3 MINUTES)', spec: '60/6', category: '玩具烟花系列', isSoldOut: false, youtubeId: 'bGCh2DTkpco' },
+            { id: 'PM3434N', name: 'HAPPY BOOM MANCIS', spec: '60/60/10', category: '传统鞭炮', isSoldOut: false, youtubeId: '' },
+            { id: 'PM3636N', name: 'HAPPY BOOM 14" BESI', spec: '20/20/8', category: '手持系列', isSoldOut: false, youtubeId: '' },
+            { id: 'PM3737N', name: 'HAPPY BOOM THUNDER CLAP (ROCKETS)', spec: '30/20/3', category: '吐珠/火箭系列', isSoldOut: false, youtubeId: '' },
+            { id: '3737', name: 'HAPPY BOOM THUNDER CLAP (SPECIAL ROCKETS)', spec: '30/6', category: '吐珠/火箭系列', isSoldOut: false, youtubeId: '' },
+            { id: 'PM3838N', name: 'HAPPY BOOM CILI PADI', spec: '300/10/26', category: '传统鞭炮', isSoldOut: false, youtubeId: '' },
+            { id: 'PM3939N', name: 'HAPPY BOOM SUNSET BESAR', spec: '40/2/50', category: '手持系列', isSoldOut: false, youtubeId: '' },
+            { id: 'PM4040N', name: 'HAPPY BOOM BANANA HUJAN (A)', spec: '24/6', category: '单发系列', isSoldOut: false, youtubeId: '' },
+            { id: '4040', name: 'HAPPY BOOM BANANA HUJAN (B) (3 SHOT)', spec: '18/3', category: '单发系列', isSoldOut: false, youtubeId: '' },
+            { id: 'PM4141N', name: 'HAPPY BOOM MOON TRAVER (ROCKETS)', spec: '36/12/12', category: '吐珠/火箭系列', isSoldOut: false, youtubeId: '' },
+            { id: 'PM4242N', name: 'HAPPY BOOM BANANA KECIL', spec: '60/6', category: '单发系列', isSoldOut: false, youtubeId: '' },
+            { id: 'PM4444N', name: 'HAPPY BOOM 10 SHOOTS (DUSH NAGA)', spec: '40/6', category: '吐珠/火箭系列', isSoldOut: false, youtubeId: '' },
+            { id: 'PM4545N', name: 'HAPPY BOOM 10"ICE CREAM (FOUNTAIN)', spec: '10/2', category: '花筒系列', isSoldOut: false, youtubeId: '' },
+            { id: 'PM4646N', name: 'HAPPY BOOM SHOOT CAKE (4" 25 SHOT)', spec: '24/1', category: '盆花/大组合', isSoldOut: false, youtubeId: '' },
+            { id: 'PM4747N', name: 'HAPPY BOOM 8 SHOOTS ROMAN CANDLE', spec: '24/4', category: '吐珠/火箭系列', isSoldOut: false, youtubeId: '' },
+            { id: 'PM4848N', name: 'HAPPY BOOM 15" ICE CREAM (FOUNTAIN)', spec: '6/2', category: '花筒系列', isSoldOut: false, youtubeId: '' },
+            { id: '4138*', name: 'SHOOT CAKE (4" 138 SHOT)', spec: '6/1', category: '盆花/大组合', isSoldOut: false, youtubeId: '' },
+            { id: '4168*', name: 'SHOOT CAKE (4" 168 SHOT)', spec: '4/1', category: '盆花/大组合', isSoldOut: false, youtubeId: '' },
+            { id: 'V4168*', name: 'VIP SHOOT CAKE (4" 168 SHOT)', spec: '5/1', category: '盆花/大组合', isSoldOut: false, youtubeId: '' },
+            { id: '4228*', name: 'SHOOT CAKE (4" 228 SHOT)', spec: '3/1', category: '盆花/大组合', isSoldOut: false, youtubeId: '' },
+            { id: 'JL933', name: 'HAPPY BOOM DUSH 15 (ROMAN CANDLE)', spec: '80/12', category: '吐珠/火箭系列', isSoldOut: false, youtubeId: '' },
+            { id: 'JL944', name: 'HAPPY BOOM 8 SHOOTS ROMAN CANDLE', spec: '40/3', category: '吐珠/火箭系列', isSoldOut: false, youtubeId: '' },
+            { id: 'JL988_MT', name: 'FOUNTAIN MONEY TREE', spec: '40/4', category: '花筒系列', isSoldOut: false, youtubeId: '' },
+            { id: 'JL988', name: 'FOUNTAIN TRIANGLE FORTUNE (3 SEGI)', spec: '40/1', category: '花筒系列', isSoldOut: false, youtubeId: '' },
+            { id: 'JL9955', name: 'FOUNTAIN PEACOCK (5 CONE)', spec: '24/1', category: '花筒系列', isSoldOut: false, youtubeId: '' },
+            { id: 'JL9966_F', name: 'FLYING FOUNTAIN', spec: '36/1', category: '盆花/大组合', isSoldOut: false, youtubeId: '' },
+            { id: 'JL988_MD', name: 'PEARL BURST', spec: '60/10', category: '花筒系列', isSoldOut: false, youtubeId: '' },
+            { id: 'JL988_HX', name: 'FOUNTAIN HEXA RADIANCE', spec: '60/1', category: '花筒系列', isSoldOut: false, youtubeId: '' },
+            { id: 'JL9911', name: '3" MINI ICE CREAM', spec: '72/6', category: '花筒系列', isSoldOut: false, youtubeId: '' },
+            { id: 'JL11_4', name: 'HAPPY BOOM SUNSET 4 COLOUR', spec: '30/6/20', category: '手持系列', isSoldOut: false, youtubeId: '' },
+            { id: 'JL9966_K', name: 'HAPPY BOOM SUNSET KIPAS', spec: '12/2', category: '手持系列', isSoldOut: false, youtubeId: '' },
+            { id: 'JL9500', name: 'POP POP COLOUR', spec: '12/50/35', category: '玩具烟花系列', isSoldOut: false, youtubeId: '' },
+            { id: 'JL9500_B', name: 'POP POP COLOUR (BIG)', spec: '12/40/20', category: '玩具烟花系列', isSoldOut: false, youtubeId: '' },
+            { id: 'JL9500_T', name: 'THUNDER POP POP', spec: '12/12/20', category: '玩具烟花系列', isSoldOut: false, youtubeId: '' },
+            { id: 'JL88_B', name: 'HAPPY BOOM PILI CRACKER (NAGA 3 MINUTES BESAR)', spec: '32/4', category: '玩具烟花系列', isSoldOut: false, youtubeId: '' },
+            { id: 'PM1212N_B', name: 'HAPPY BOOM PILI CRACKER (TELUR NAGA BESAR)', spec: '36/24/6', category: '玩具烟花系列', isSoldOut: false, youtubeId: '' }
         ];
 
         let cart = {};
@@ -230,7 +227,6 @@
             filtered.forEach(p => {
                 const pureId = p.id.split('-')[0].replace('*', '');
                 const imgPath = `images/${pureId}.jpg`;
-                const videoPath = `videos/${pureId}.mp4`;
                 const card = document.createElement('div');
                 card.className = `product-card raya-card rounded-2xl overflow-hidden shadow-lg flex flex-col transition-all relative ${p.isSoldOut ? 'opacity-75 grayscale-[0.3]' : ''}`;
                 
@@ -238,10 +234,13 @@
                     <div class="aspect-square bg-gray-50 flex items-center justify-center relative overflow-hidden group">
                         <img src="${imgPath}" onclick="${p.isSoldOut ? '' : `openLightbox(this.src)`}" class="w-full h-full object-cover ${p.isSoldOut ? 'cursor-default' : 'cursor-zoom-in'}" onerror="handleImageError(this, '${pureId}', '${p.id}')">
                         ${p.isSoldOut ? `<div class="absolute inset-0 sold-out-overlay flex items-center justify-center z-10"><span class="border-4 border-[#fbbf24] text-[#fbbf24] font-black text-lg px-3 py-1 rotate-[-15deg] uppercase tracking-widest">HABIS STOK</span></div>` : ''}
-                        <button onclick="openVideo('${videoPath}')" class="absolute bottom-2 right-2 bg-[#064e3b]/80 text-[#fbbf24] p-2 rounded-full shadow-lg flex items-center gap-1 scale-90">
+                        
+                        <!-- Updated: Only show video button if youtubeId exists -->
+                        ${p.youtubeId ? `
+                        <button onclick="openVideo('${p.youtubeId}')" class="absolute bottom-2 right-2 bg-[#064e3b]/80 text-[#fbbf24] p-2 rounded-full shadow-lg flex items-center gap-1 scale-90 active:scale-75 transition-transform">
                             <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16"><path d="M11.596 8.697l-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/></svg>
                             <span class="text-[9px] font-bold">Video</span>
-                        </button>
+                        </button>` : ''}
                     </div>
                     <div class="p-3 flex-1 flex flex-col">
                         <p class="text-[#064e3b] font-black text-[9px] tracking-tighter opacity-60 uppercase">${p.id}</p>
@@ -274,13 +273,7 @@
             if (!product || product.isSoldOut) return;
             const qtyInput = document.getElementById(`qty-${id}`);
             const qty = parseInt(qtyInput.value) || 1;
-            
-            if (cart[id]) { 
-                cart[id].qty += qty; 
-            } else { 
-                cart[id] = { name: product.name, qty: qty, displayId: product.id }; 
-            }
-            
+            if (cart[id]) { cart[id].qty += qty; } else { cart[id] = { name: product.name, qty: qty, displayId: product.id }; }
             qtyInput.value = 1;
             updateCart();
             const countLabel = document.getElementById('cart-count');
@@ -328,7 +321,6 @@
         }
 
         function deleteFromCart(id) { delete cart[id]; updateCart(); }
-
         function clearCart() { cart = {}; updateCart(); }
 
         function filterProducts(cat) {
@@ -350,18 +342,18 @@
             document.getElementById('image-lightbox').classList.replace('flex', 'hidden'); 
         }
 
-        function openVideo(src) {
-            const v = document.getElementById('product-video'); 
-            v.src = src;
+        // UPDATED: Function to handle YouTube Embeds
+        function openVideo(youtubeId) {
+            if (!youtubeId) return;
+            const player = document.getElementById('youtube-player'); 
+            // Set the embed URL with autoplay
+            player.src = `https://www.youtube.com/embed/${youtubeId}?autoplay=1`;
             document.getElementById('video-lightbox').classList.replace('hidden', 'flex'); 
-            v.play().catch(e => console.log("Video not found"));
         }
         
-        // FIXED: Now correctly hides the lightbox
         function closeVideo() {
-            const v = document.getElementById('product-video'); 
-            v.pause(); 
-            v.src = "";
+            const player = document.getElementById('youtube-player'); 
+            player.src = ""; // Stop the video by clearing src
             document.getElementById('video-lightbox').classList.replace('flex', 'hidden');
         }
 
@@ -377,10 +369,7 @@
                 totalQty += item.qty;
                 msg += `${i+1}. *[${item.displayId}]* ${item.name}\n   👉 Kuantiti: *${item.qty} Unit*\n`;
             });
-            msg += `----------------------------\n`;
-            msg += `📦 *Jumlah Keseluruhan: ${totalQty} Unit*\n`;
-            msg += `----------------------------\n`;
-            msg += `Boss, sila berikan sebut harga (Quotation). Terima kasih! ✨`;
+            msg += `----------------------------\n📦 *Jumlah Keseluruhan: ${totalQty} Unit*\n----------------------------\nBoss, sila berikan sebut harga (Quotation). Terima kasih! ✨`;
             window.open(`https://wa.me/${currentAgent.phone}?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
