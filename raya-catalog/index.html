@@ -14,12 +14,13 @@
             background-size: 30px 30px;
             background-position: 0 0, 15px 15px;
             background-attachment: fixed;
+            color: white;
         }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        .animate-slide-up { animation: slideUp 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
         
         .product-card:active { transform: scale(0.98); }
         .category-btn.active { 
@@ -36,109 +37,302 @@
             background: rgba(0,0,0,0.6);
             backdrop-filter: blur(2px);
         }
+        .view-section { display: none; }
+        .view-section.active { display: block; }
+
+        .lang-btn.active {
+            background: #fbbf24;
+            color: #064e3b;
+            border-color: transparent;
+        }
     </style>
 </head>
-<body class="text-white pb-24">
+<body class="pb-24">
 
     <!-- Navigasi Atas -->
     <nav class="sticky top-0 z-50 bg-[#064e3b]/95 backdrop-blur-md border-b border-[#fbbf24]/30 px-4 py-3 flex justify-between items-center shadow-2xl">
-        <div class="flex items-center gap-3">
-            <!-- Logo Kedai -->
+        <!-- Logo & Title -->
+        <div class="flex items-center gap-3 cursor-pointer" onclick="showView('home')">
             <img src="logo.png" alt="Logo" class="w-10 h-10 object-contain rounded-md border border-[#fbbf24]/30" onerror="this.style.display='none'">
             <div class="flex flex-col">
-                <span class="font-extrabold text-lg text-[#fbbf24] leading-none uppercase tracking-tight">Dragon Elite Fireworks</span>
-                <span class="text-[10px] text-[#fbbf24]/70 mt-1 uppercase tracking-tighter text-nowrap">Katalog 2026 🌙</span>
+                <span class="font-extrabold text-sm md:text-lg text-[#fbbf24] leading-none uppercase tracking-tight">Dragon Elite</span>
+                <span class="text-[9px] md:text-[10px] text-[#fbbf24]/70 mt-1 uppercase tracking-tighter text-nowrap" id="ui-nav-subtitle">Katalog 2026 🌙</span>
             </div>
-        </div>
-        <!-- Butang Bakul/Draf -->
-        <button onclick="toggleCart()" class="relative p-2.5 bg-[#fbbf24] text-[#064e3b] rounded-full shadow-lg active:scale-90 transition-transform">
-            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-            <span id="cart-count" class="absolute -top-1 -right-1 bg-white text-[#064e3b] text-[10px] font-black px-2 py-0.5 rounded-full border-2 border-[#064e3b]">0</span>
-        </button>
-    </nav>
-
-    <!-- Header & Banner -->
-    <header class="text-center">
-        <!-- Banner Utama -->
-        <div class="w-full max-w-5xl mx-auto px-4 mt-6">
-            <img src="banner.jpg" alt="Banner" class="w-full h-auto rounded-3xl shadow-2xl border-2 border-[#fbbf24]/20" onerror="this.src='https://placehold.co/1200x400/064e3b/fbbf24?text=Dragon+Elite+Fireworks+2026'">
         </div>
         
-        <div class="py-10 px-4">
-            <!-- Teks "Katalog Bunga Api Aidilfitri 2026" telah dipadamkan di sini -->
-            <h1 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-b from-yellow-200 to-[#fbbf24] mb-2">
-                Senarai Produk Raya
-            </h1>
-            <p class="text-yellow-100/60 text-xs italic tracking-wide">Pilih kuantiti & hantar draf pesanan ke WhatsApp untuk sebut harga.</p>
-        </div>
-    </header>
-
-    <!-- Penapis Kategori -->
-    <div class="sticky top-[65px] z-40 bg-[#064e3b]/90 backdrop-blur-sm py-3 mb-4 shadow-lg">
-        <div class="flex gap-2 overflow-x-auto px-4 hide-scrollbar" id="category-list">
-            <button onclick="filterProducts('all')" class="category-btn active whitespace-nowrap px-5 py-2 rounded-xl text-xs font-bold border border-[#fbbf24]/30 transition-all">Semua</button>
-            <button onclick="filterProducts('手持系列')" class="category-btn whitespace-nowrap px-5 py-2 rounded-xl text-xs font-bold border border-[#fbbf24]/30 transition-all">🪄 Sparklers</button>
-            <button onclick="filterProducts('花筒系列')" class="category-btn whitespace-nowrap px-5 py-2 rounded-xl text-xs font-bold border border-[#fbbf24]/30 transition-all">✨ Fountain</button>
-            <button onclick="filterProducts('玩具烟花系列')" class="category-btn whitespace-nowrap px-5 py-2 rounded-xl text-xs font-bold border border-[#fbbf24]/30 transition-all">🤡 Kids/Pop</button>
-            <button onclick="filterProducts('传统鞭炮')" class="category-btn whitespace-nowrap px-5 py-2 rounded-xl text-xs font-bold border border-[#fbbf24]/30 transition-all">🧨 Mercun Papan</button>
-            <button onclick="filterProducts('单发系列')" class="category-btn whitespace-nowrap px-5 py-2 rounded-xl text-xs font-bold border border-[#fbbf24]/30 transition-all">🚀 Single Shot</button>
-            <button onclick="filterProducts('吐珠/火箭系列')" class="category-btn whitespace-nowrap px-5 py-2 rounded-xl text-xs font-bold border border-[#fbbf24]/30 transition-all">☄️ Roman Candle</button>
-            <button onclick="filterProducts('盆花/大组合')" class="category-btn whitespace-nowrap px-5 py-2 rounded-xl text-xs font-bold border border-[#fbbf24]/30 transition-all">🎆 Cake/Box</button>
-        </div>
-    </div>
-
-    <!-- Grid Produk -->
-    <main class="container mx-auto px-4 pb-12">
-        <div id="product-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"></div>
-    </main>
-
-    <!-- Modal Draf Pesanan -->
-    <div id="cart-modal" class="fixed inset-0 z-[60] bg-[#064e3b]/80 hidden items-end justify-center">
-        <div class="bg-white text-gray-800 w-full max-w-lg rounded-t-[2.5rem] overflow-hidden shadow-2xl animate-slide-up">
-            <div class="bg-[#064e3b] p-6 text-white flex justify-between items-center border-b-4 border-[#fbbf24]">
-                <div>
-                    <h2 class="text-xl font-extrabold italic tracking-tight uppercase">Draf Pesanan</h2>
-                    <p class="text-[10px] text-[#fbbf24] font-bold uppercase tracking-wider">Senarai kuantiti untuk sebut harga</p>
-                </div>
-                <div class="flex items-center gap-3">
-                    <button onclick="clearCart()" class="bg-red-600 text-white text-[10px] font-black px-3 py-1.5 rounded-lg hover:bg-red-700 transition-colors shadow-lg active:scale-90">PADAM SEMUA</button>
-                    <button onclick="toggleCart()" class="text-[#fbbf24]/80 hover:text-[#fbbf24] text-3xl">&times;</button>
-                </div>
+        <div class="flex items-center gap-2">
+            <!-- Language Switcher -->
+            <div class="flex bg-black/20 rounded-full p-1 border border-white/10 mr-1">
+                <button onclick="setLanguage('ms')" id="lang-ms" class="lang-btn px-2 py-1 rounded-full text-[9px] font-bold transition-all uppercase">MY</button>
+                <button onclick="setLanguage('en')" id="lang-en" class="lang-btn px-2 py-1 rounded-full text-[9px] font-bold transition-all uppercase">EN</button>
+                <button onclick="setLanguage('zh')" id="lang-zh" class="lang-btn px-2 py-1 rounded-full text-[9px] font-bold transition-all uppercase">中</button>
             </div>
-            <div id="cart-items" class="max-h-[45vh] overflow-y-auto p-6 space-y-4"></div>
-            <div class="p-6 border-t border-gray-100 bg-gray-50">
-                <div class="flex justify-between items-center mb-6">
-                    <span class="text-gray-400 font-bold text-sm uppercase tracking-widest">Jumlah Keseluruhan:</span>
-                    <span id="cart-total-qty" class="text-2xl font-black text-[#064e3b]">0 Unit</span>
-                </div>
-                <button onclick="checkout()" class="w-full bg-[#25D366] hover:bg-[#1ebc57] text-white py-5 rounded-2xl font-black text-lg shadow-xl flex items-center justify-center gap-3 active:scale-95 transition-all">
-                    <span>Hantar Senarai Ke WhatsApp</span>
-                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/></svg>
+
+            <!-- Agent Button (Added in Nav) -->
+            <button onclick="showView('ejen')" id="ui-nav-btn-ejen" class="bg-[#fbbf24]/20 border border-[#fbbf24]/40 text-[#fbbf24] px-3 py-2 rounded-full text-[10px] font-black uppercase hover:bg-[#fbbf24] hover:text-[#064e3b] transition-all flex items-center gap-1">
+                <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16"><path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+                <span class="hidden xs:inline">EJEN</span>
+            </button>
+
+            <!-- Cart Button -->
+            <button onclick="toggleCart()" class="relative p-2.5 bg-[#fbbf24] text-[#064e3b] rounded-full shadow-lg active:scale-90 transition-transform">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                <span id="cart-count" class="absolute -top-1 -right-1 bg-white text-[#064e3b] text-[10px] font-black px-1.5 py-0.5 rounded-full border-2 border-[#064e3b]">0</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- SECTION: HOME VIEW -->
+    <div id="view-home" class="view-section active animate-fade-in">
+        <div class="relative w-full aspect-[16/9] md:aspect-[21/7] overflow-hidden bg-black/20 mt-4 px-4">
+            <img src="banner.jpg" class="w-full h-full object-cover rounded-3xl border-2 border-[#fbbf24]/30" onerror="this.src='https://placehold.co/1200x600/064e3b/fbbf24?text=Dragon+Elite+2026'">
+        </div>
+        
+        <div class="px-6 py-12 text-center max-w-2xl mx-auto">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-[#fbbf24] mb-4 tracking-tighter italic uppercase leading-tight" id="ui-home-title">Elite Quality,<br>Superior Fireworks</h1>
+            <p class="text-yellow-100/70 text-sm mb-10 leading-relaxed" id="ui-home-desc">Selamat datang ke portal rasmi Dragon Elite Fireworks 2026. Kami membekalkan bunga api kualiti premium untuk memeriahkan Aidilfitri anda.</p>
+            
+            <div class="grid grid-cols-1 gap-4">
+                <button onclick="showView('catalog')" class="bg-[#fbbf24] text-[#064e3b] py-5 rounded-2xl font-black text-xl shadow-xl active:scale-95 transition-all uppercase tracking-tight" id="ui-btn-catalog">
+                    Tengok Katalog Produk
+                </button>
+                <button onclick="showView('ejen')" class="bg-white/10 border border-white/20 text-white py-5 rounded-2xl font-black text-xl active:scale-95 transition-all uppercase tracking-tight" id="ui-btn-ejen">
+                    Info Pengambilan Ejen
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Komponen Lightbox -->
-    <div id="image-lightbox" class="fixed inset-0 z-[100] bg-black/95 hidden items-center justify-center p-4" onclick="closeLightbox()">
-        <img id="lightbox-img" src="" class="max-w-full max-h-[85vh] rounded-lg shadow-2xl border-2 border-[#fbbf24]">
+    <!-- SECTION: CATALOG VIEW -->
+    <div id="view-catalog" class="view-section animate-fade-in">
+        <header class="py-8 px-4 text-center">
+            <h1 class="text-3xl font-extrabold text-[#fbbf24] mb-2 uppercase italic" id="ui-cat-title">Katalog Produk</h1>
+            <p class="text-yellow-100/60 text-xs italic tracking-wide" id="ui-cat-subtitle">Pilih kuantiti & hantar draf pesanan ke WhatsApp.</p>
+        </header>
+
+        <div class="sticky top-[65px] z-40 bg-[#064e3b]/90 backdrop-blur-sm py-3 mb-4 shadow-lg border-b border-white/10">
+            <div class="flex gap-2 overflow-x-auto px-4 hide-scrollbar" id="category-list"></div>
+        </div>
+
+        <main class="container mx-auto px-4 pb-12">
+            <div id="product-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"></div>
+        </main>
     </div>
 
-    <div id="video-lightbox" class="fixed inset-0 z-[100] bg-black/95 hidden items-center justify-center p-4" onclick="closeVideo()">
-        <div class="relative w-full max-w-2xl aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl border-2 border-[#fbbf24]" onclick="event.stopPropagation()">
-            <iframe id="youtube-player" class="w-full h-full" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            <button class="absolute top-3 right-3 bg-red-600 text-white w-8 h-8 rounded-full text-xl font-bold flex items-center justify-center shadow-lg" onclick="closeVideo()">&times;</button>
+    <!-- SECTION: EJEN VIEW -->
+    <div id="view-ejen" class="view-section animate-fade-in">
+        <div class="px-6 py-12 max-w-xl mx-auto">
+            <div class="bg-white/5 border border-white/10 p-8 rounded-[2rem] text-center mb-6">
+                <div class="w-20 h-20 bg-[#fbbf24] text-[#064e3b] rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl">
+                    <svg width="40" height="40" fill="currentColor" viewBox="0 0 16 16"><path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM2 9a2 2 0 1 1 4 0 2 2 0 0 1-4 0zm2-9a3 3 0 1 1 0 6 3 3 0 0 1 0-6zm.45 10.941C1.387 11.685 0 12.83 0 14.037v.463c0 .276.224.5.5.5l7-.001c.038 0 .073-.007.108-.022a1.506 1.506 0 0 1-.108-.477v-.5c0-1.637.75-3.131 2.107-4.115-.404-.131-.88-.204-1.336-.204-1.223 0-2.318.492-3.001 1.277z"/></svg>
+                </div>
+                <h2 class="text-3xl font-extrabold text-[#fbbf24] mb-2 uppercase" id="ui-ejen-title">Sertai Ejen Kami</h2>
+                <p class="text-yellow-100/60 mb-8" id="ui-ejen-subtitle">Peluang pendapatan lumayan bersama pembekal bunga api No. 1</p>
+                <ul class="text-left space-y-4 mb-10 text-sm" id="ui-ejen-list"></ul>
+                <button onclick="contactAgentSupport()" class="w-full bg-[#25D366] text-white py-5 rounded-2xl font-black text-lg flex items-center justify-center gap-3 active:scale-95 transition-all" id="ui-btn-ejen-register">
+                    <span>Daftar Sebagai Ejen</span>
+                </button>
+            </div>
+            <button onclick="showView('home')" class="w-full text-white/40 text-[10px] font-bold uppercase tracking-widest py-4" id="ui-btn-back-home">Kembali Ke Laman Utama</button>
         </div>
     </div>
 
+    <!-- Modals -->
+    <div id="cart-modal" class="fixed inset-0 z-[60] bg-[#064e3b]/80 hidden items-end justify-center">
+        <div class="bg-white text-gray-800 w-full max-w-lg rounded-t-[2.5rem] overflow-hidden shadow-2xl animate-slide-up">
+            <div class="bg-[#064e3b] p-6 text-white flex justify-between items-center border-b-4 border-[#fbbf24]">
+                <div><h2 class="text-xl font-extrabold italic tracking-tight uppercase" id="ui-cart-title">Draf Pesanan</h2><p class="text-[10px] text-[#fbbf24] font-bold uppercase tracking-wider" id="ui-cart-subtitle">Senarai untuk sebut harga</p></div>
+                <div class="flex items-center gap-3"><button onclick="clearCart()" class="bg-red-600 text-white text-[10px] font-black px-3 py-1.5 rounded-lg active:scale-90" id="ui-btn-clear">PADAM SEMUA</button><button onclick="toggleCart()" class="text-[#fbbf24]/80 text-3xl">&times;</button></div>
+            </div>
+            <div id="cart-items" class="max-h-[45vh] overflow-y-auto p-6 space-y-4"></div>
+            <div class="p-6 border-t border-gray-100 bg-gray-50">
+                <div class="flex justify-between items-center mb-6"><span class="text-gray-400 font-bold text-sm uppercase" id="ui-cart-total-label">Jumlah:</span><span id="cart-total-qty" class="text-2xl font-black text-[#064e3b]">0 Unit</span></div>
+                <button onclick="checkout()" class="w-full bg-[#25D366] text-white py-5 rounded-2xl font-black text-lg shadow-xl flex items-center justify-center gap-3" id="ui-btn-whatsapp"><span>Hantar Ke WhatsApp</span></button>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-lightbox" class="fixed inset-0 z-[100] bg-black/95 hidden items-center justify-center p-4" onclick="closeLightbox()"><img id="lightbox-img" src="" class="max-w-full max-h-[85vh] rounded-lg shadow-2xl border-2 border-[#fbbf24]"></div>
+    <div id="video-lightbox" class="fixed inset-0 z-[100] bg-black/95 hidden items-center justify-center p-4" onclick="closeVideo()"><div class="relative w-full max-w-2xl aspect-video bg-black rounded-2xl overflow-hidden border-2 border-[#fbbf24]" onclick="event.stopPropagation()"><iframe id="youtube-player" class="w-full h-full" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe><button class="absolute top-3 right-3 bg-red-600 text-white w-8 h-8 rounded-full text-xl" onclick="closeVideo()">&times;</button></div></div>
+
     <script>
-        const agents = {
-            'hq': { name: 'Official HQ', phone: '60139853913' }
+        const translations = {
+            ms: {
+                navSubtitle: "Katalog 2026 🌙",
+                navBtnEjen: "EJEN",
+                homeTitle: "Elite Quality,<br>Superior Fireworks",
+                homeDesc: "Selamat datang ke portal rasmi Dragon Elite Fireworks 2026. Kami membekalkan bunga api kualiti premium untuk memeriahkan Aidilfitri anda.",
+                btnCatalog: "Tengok Katalog Produk",
+                btnEjen: "Info Pengambilan Ejen",
+                catTitle: "Katalog Produk",
+                catSubtitle: "Pilih kuantiti & hantar draf pesanan ke WhatsApp.",
+                ejenTitle: "Sertai Ejen Kami",
+                ejenSubtitle: "Peluang pendapatan lumayan bersama pembekal bunga api No. 1",
+                ejenList: [
+                    "<b>Stok Ready</b> - Tiada masalah bekalan putus.",
+                    "<b>Margin Tinggi</b> - Harga borong paling rendah untuk ejen.",
+                    "<b>Bahan Marketing</b> - Gambar & video kualiti HD.",
+                    "<b>Kualiti Premium</b> - Produk lulus SIRIM & sah."
+                ],
+                btnEjenRegister: "Daftar Sebagai Ejen",
+                btnBackHome: "Kembali Ke Laman Utama",
+                cartTitle: "Draf Pesanan",
+                cartSubtitle: "Senarai untuk sebut harga",
+                btnClear: "PADAM SEMUA",
+                cartTotalLabel: "Jumlah:",
+                btnWhatsapp: "Hantar Ke WhatsApp",
+                stokHabis: "STOK HABIS",
+                tambah: "Tambah",
+                unit: "Unit",
+                all: "Semua",
+                catSparklers: "🪄 Sparklers",
+                catFountain: "✨ Fountain",
+                catKids: "🤡 Kids/Pop",
+                catPapan: "🧨 Mercun Papan",
+                catSingle: "🚀 Single Shot",
+                catRoman: "☄️ Roman Candle",
+                catCake: "🎆 Cake/Box",
+                waMsgOrder: "🌙 *DRAGON ELITE FIREWORKS 2026 - PERTANYAAN PESANAN* 🌙\n🙋‍♂️ *Agent:* [Tulis Nama Anda]\n----------------------------\n",
+                waMsgFooter: "----------------------------\n📦 *Jumlah Keseluruhan: {qty} Unit*\n----------------------------\nBoss, sila berikan sebut harga (Quotation). Terima kasih! ✨",
+                waMsgEjen: "🌙 *DRAGON ELITE FIREWORKS 2026 - PERTANYAAN EJEN* 🌙\n\nHelo Boss, saya berminat untuk mendaftar sebagai ejen Dragon Elite bagi tahun 2026. Boleh kongsikan syarat dan pakej harga? Terima kasih!"
+            },
+            en: {
+                navSubtitle: "2026 Catalogue 🌙",
+                navBtnEjen: "AGENT",
+                homeTitle: "Elite Quality,<br>Superior Fireworks",
+                homeDesc: "Welcome to the official portal of Dragon Elite Fireworks 2026. We supply premium quality fireworks to light up your Aidilfitri celebrations.",
+                btnCatalog: "View Product Catalogue",
+                btnEjen: "Agent Recruitment Info",
+                catTitle: "Product Catalogue",
+                catSubtitle: "Select quantity & send order draft to WhatsApp.",
+                ejenTitle: "Join Our Team",
+                ejenSubtitle: "Earn lucrative income with the No. 1 fireworks supplier",
+                ejenList: [
+                    "<b>Ready Stock</b> - No supply interruption issues.",
+                    "<b>High Margin</b> - Lowest wholesale prices for agents.",
+                    "<b>Marketing Materials</b> - HD quality photos & videos.",
+                    "<b>Premium Quality</b> - SIRIM approved & legal products."
+                ],
+                btnEjenRegister: "Register As Agent",
+                btnBackHome: "Back To Home",
+                cartTitle: "Order Draft",
+                cartSubtitle: "List for price quotation",
+                btnClear: "CLEAR ALL",
+                cartTotalLabel: "Total:",
+                btnWhatsapp: "Send To WhatsApp",
+                stokHabis: "SOLD OUT",
+                tambah: "Add",
+                unit: "Units",
+                all: "All",
+                catSparklers: "🪄 Sparklers",
+                catFountain: "✨ Fountain",
+                catKids: "🤡 Kids/Pop",
+                catPapan: "🧨 Firecrackers",
+                catSingle: "🚀 Single Shot",
+                catRoman: "☄️ Roman Candle",
+                catCake: "🎆 Cake/Box",
+                waMsgOrder: "🌙 *DRAGON ELITE FIREWORKS 2026 - ORDER INQUIRY* 🌙\n🙋‍♂️ *Name:* [Type Your Name Here]\n----------------------------\n",
+                waMsgFooter: "----------------------------\n📦 *Total Quantity: {qty} Units*\n----------------------------\nBoss, please provide a quotation for the list above. Thank you! ✨",
+                waMsgEjen: "🌙 *DRAGON ELITE FIREWORKS 2026 - AGENT INQUIRY* 🌙\n\nHello Boss, I am interested in registering as a Dragon Elite agent for 2026. Could you share the requirements and price packages? Thank you!"
+            },
+            zh: {
+                navSubtitle: "2026 目录 🌙",
+                navBtnEjen: "招代理",
+                homeTitle: "精英品质,<br>卓越烟花",
+                homeDesc: "欢迎来到 Dragon Elite Fireworks 2026 官方门户。我们提供优质烟花，为您点亮开斋节庆典。",
+                btnCatalog: "浏览产品目录",
+                btnEjen: "代理加盟资讯",
+                catTitle: "产品目录",
+                catSubtitle: "选择数量并将订单草案发送至 WhatsApp 获取报价。",
+                ejenTitle: "加入我们的团队",
+                ejenSubtitle: "与大马第一烟花供应商一起赚取丰厚收入",
+                ejenList: [
+                    "<b>现货供应</b> - 无需担心断货问题。",
+                    "<b>高利润空间</b> - 为代理提供最低批发价。",
+                    "<b>营销素材</b> - 提供高清产品图片和视频。",
+                    "<b>品质保障</b> - 符合 SIRIM 标准且合法经营。"
+                ],
+                btnEjenRegister: "立即申请代理",
+                btnBackHome: "返回主页",
+                cartTitle: "订单草案",
+                cartSubtitle: "获取报价的清单",
+                btnClear: "清空全部",
+                cartTotalLabel: "合计数量:",
+                btnWhatsapp: "发送至 WhatsApp",
+                stokHabis: "售罄",
+                tambah: "加入",
+                unit: "单位",
+                all: "全部",
+                catSparklers: "🪄 手持烟花",
+                catFountain: "✨ 花筒/喷泉",
+                catKids: "🤡 儿童/玩具",
+                catPapan: "🧨 传统鞭炮",
+                catSingle: "🚀 单发系列",
+                catRoman: "☄️ 吐珠/火箭",
+                catCake: "🎆 盆花/组合",
+                waMsgOrder: "🌙 *DRAGON ELITE FIREWORKS 2026 - 订单咨询* 🌙\n🙋‍♂️ *姓名:* [在此输入您的姓名]\n----------------------------\n",
+                waMsgFooter: "----------------------------\n📦 *总计数量: {qty} 单位*\n----------------------------\n老板，请提供以上清单的报价。谢谢！ ✨",
+                waMsgEjen: "🌙 *DRAGON ELITE FIREWORKS 2026 - 代理咨询* 🌙\n\n老板你好，我有兴趣申请成为 2026 年 Dragon Elite 的代理。请问可以分享申请条件和配套资料吗？谢谢！"
+            }
         };
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const currentAgent = agents[urlParams.get('id')] || agents['hq'];
+        let currentLang = 'ms';
+        let cart = {};
 
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('lang-' + lang).classList.add('active');
+            updateUI();
+        }
+
+        function updateUI() {
+            const t = translations[currentLang];
+            document.getElementById('ui-nav-subtitle').innerText = t.navSubtitle;
+            document.getElementById('ui-nav-btn-ejen').querySelector('span').innerText = t.navBtnEjen;
+            document.getElementById('ui-home-title').innerHTML = t.homeTitle;
+            document.getElementById('ui-home-desc').innerText = t.homeDesc;
+            document.getElementById('ui-btn-catalog').innerText = t.btnCatalog;
+            document.getElementById('ui-btn-ejen').innerText = t.btnEjen;
+            document.getElementById('ui-cat-title').innerText = t.catTitle;
+            document.getElementById('ui-cat-subtitle').innerText = t.catSubtitle;
+            document.getElementById('ui-ejen-title').innerText = t.ejenTitle;
+            document.getElementById('ui-ejen-subtitle').innerText = t.ejenSubtitle;
+            document.getElementById('ui-btn-ejen-register').querySelector('span').innerText = t.btnEjenRegister;
+            document.getElementById('ui-btn-back-home').innerText = t.btnBackHome;
+            document.getElementById('ui-cart-title').innerText = t.cartTitle;
+            document.getElementById('ui-cart-subtitle').innerText = t.cartSubtitle;
+            document.getElementById('ui-btn-clear').innerText = t.btnClear;
+            document.getElementById('ui-cart-total-label').innerText = t.cartTotalLabel;
+            document.getElementById('ui-btn-whatsapp').querySelector('span').innerText = t.btnWhatsapp;
+
+            const listContainer = document.getElementById('ui-ejen-list');
+            listContainer.innerHTML = t.ejenList.map(item => `<li class="flex items-start gap-3"><span class="text-[#fbbf24] mt-1">✓</span><span>${item}</span></li>`).join('');
+
+            renderCategories();
+            renderProducts();
+            updateCart();
+        }
+
+        function showView(viewId) {
+            document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+            document.getElementById('view-' + viewId).classList.add('active');
+            window.scrollTo(0,0);
+        }
+
+        function renderCategories() {
+            const t = translations[currentLang];
+            const container = document.getElementById('category-list');
+            const categoryMap = { 'all': 'all', '手持系列': 'catSparklers', '花筒系列': 'catFountain', '玩具烟花系列': 'catKids', '传统鞭炮': 'catPapan', '单发系列': 'catSingle', '吐珠/火箭系列': 'catRoman', '盆花/大组合': 'catCake' };
+            container.innerHTML = Object.keys(categoryMap).map(key => {
+                const label = key === 'all' ? t.all : t[categoryMap[key]];
+                return `<button onclick="filterProducts('${key}')" class="category-btn whitespace-nowrap px-5 py-2 rounded-xl text-xs font-bold border border-[#fbbf24]/30 transition-all">${label}</button>`;
+            }).join('');
+            const firstBtn = container.querySelector('button');
+            if (firstBtn) firstBtn.classList.add('active');
+        }
+
+        // --- PRODUCT DATA (Same as before) ---
         const products = [
             { id: 'PM11N', name: 'HAPPY BOOM GLOW OF SUNSET', spec: '60/4/25', category: '手持系列', isSoldOut: false, youtubeId: '' },
             { id: 'PM22N', name: 'HAPPY BOOM 7" BESI', spec: '40/30/8', category: '手持系列', isSoldOut: false, youtubeId: '' },
@@ -212,183 +406,27 @@
             { id: 'PM1212N_B', name: 'HAPPY BOOM PILI CRACKER (TELUR NAGA BESAR)', spec: '36/24/6', category: '玩具烟花系列', isSoldOut: false, youtubeId: '' }
         ];
 
-        let cart = {};
-
-        // Melaraskan ralat gambar
-        function handleImageError(img, pureId, id) {
-            if (img.src.includes('.jpg')) {
-                img.src = `images/${pureId}.png`;
-            } else if (img.src.includes('.png')) {
-                img.onerror = null;
-                img.src = `https://placehold.co/400x400/064e3b/fbbf24?text=${id}`;
-            }
-        }
-
-        // Render senarai produk
-        function renderProducts(catFilter = 'all') {
-            const grid = document.getElementById('product-grid');
-            grid.innerHTML = '';
-            const filtered = catFilter === 'all' ? products : products.filter(p => p.category === catFilter);
-
-            filtered.forEach(p => {
-                const pureId = p.id.split('-')[0].replace('*', '');
-                const imgPath = `images/${pureId}.jpg`;
-                const card = document.createElement('div');
-                card.className = `product-card raya-card rounded-2xl overflow-hidden shadow-lg flex flex-col transition-all relative ${p.isSoldOut ? 'opacity-75 grayscale-[0.3]' : ''}`;
-                
-                card.innerHTML = `
-                    <div class="aspect-square bg-gray-50 flex items-center justify-center relative overflow-hidden group">
-                        <img src="${imgPath}" onclick="${p.isSoldOut ? '' : `openLightbox(this.src)`}" class="w-full h-full object-cover ${p.isSoldOut ? 'cursor-default' : 'cursor-zoom-in'}" onerror="handleImageError(this, '${pureId}', '${p.id}')">
-                        ${p.isSoldOut ? `<div class="absolute inset-0 sold-out-overlay flex items-center justify-center z-10"><span class="border-4 border-[#fbbf24] text-[#fbbf24] font-black text-lg px-3 py-1 rotate-[-15deg] uppercase tracking-widest">STOK HABIS</span></div>` : ''}
-                        
-                        ${p.youtubeId ? `
-                        <button onclick="openVideo('${p.youtubeId}')" class="absolute bottom-2 right-2 bg-[#064e3b]/80 text-[#fbbf24] p-2 rounded-full shadow-lg flex items-center gap-1 scale-90 active:scale-75 transition-transform">
-                            <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16"><path d="M11.596 8.697l-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/></svg>
-                            <span class="text-[9px] font-bold">Video</span>
-                        </button>` : ''}
-                    </div>
-                    <div class="p-3 flex-1 flex flex-col text-center">
-                        <p class="text-[#064e3b] font-black text-[9px] tracking-tighter opacity-60 uppercase">${p.id}</p>
-                        <h3 class="text-gray-800 text-[11px] font-extrabold h-8 line-clamp-2 leading-tight">${p.name}</h3>
-                        <p class="text-gray-400 text-[10px] mt-1 italic">${p.spec}</p>
-                        
-                        <div class="mt-auto pt-3">
-                            <div class="flex items-center justify-between border-2 border-gray-100 rounded-xl h-9 mb-2 bg-gray-50 overflow-hidden ${p.isSoldOut ? 'opacity-30' : ''}">
-                                <button ${p.isSoldOut ? 'disabled' : `onclick="changeProductQty('${p.id}', -1)"`} class="w-10 h-full font-bold text-gray-400 hover:bg-gray-200">-</button>
-                                <input id="qty-${p.id}" type="number" value="1" min="1" readonly class="w-10 text-center text-xs font-black bg-transparent text-gray-800 focus:outline-none">
-                                <button ${p.isSoldOut ? 'disabled' : `onclick="changeProductQty('${p.id}', 1)"`} class="w-10 h-full font-bold text-gray-400 hover:bg-gray-200">+</button>
-                            </div>
-                            <button ${p.isSoldOut ? 'disabled' : `onclick="addToCart('${p.id}')"`} class="w-full ${p.isSoldOut ? 'bg-gray-300' : 'bg-[#064e3b] hover:bg-[#065f46]'} text-white py-2 rounded-xl text-xs font-black active:scale-95 transition-all shadow-md">
-                                ${p.isSoldOut ? 'HABIS' : 'Tambah Pesanan'}
-                            </button>
-                        </div>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        // Melaraskan kuantiti produk
-        function changeProductQty(id, delta) {
-            const input = document.getElementById(`qty-${id}`);
-            if (input) input.value = Math.max(1, (parseInt(input.value) || 1) + delta);
-        }
-
-        // Menambah ke bakul draf
-        function addToCart(id) {
-            const product = products.find(p => p.id === id);
-            if (!product || product.isSoldOut) return;
-            const qtyInput = document.getElementById(`qty-${id}`);
-            const qty = parseInt(qtyInput.value) || 1;
-            if (cart[id]) { cart[id].qty += qty; } else { cart[id] = { name: product.name, qty: qty, displayId: product.id }; }
-            qtyInput.value = 1;
-            updateCart();
-            const countLabel = document.getElementById('cart-count');
-            countLabel.classList.add('scale-150');
-            setTimeout(() => countLabel.classList.remove('scale-150'), 200);
-        }
-
-        // Mengemaskini status bakul
-        function updateCart() {
-            const count = Object.values(cart).reduce((a, b) => a + b.qty, 0);
-            document.getElementById('cart-count').innerText = count;
-            document.getElementById('cart-total-qty').innerText = `${count} Unit`;
-            renderCartItems();
-        }
-
-        // Render item dalam bakul draf
-        function renderCartItems() {
-            const container = document.getElementById('cart-items');
-            const keys = Object.keys(cart);
-            if (keys.length === 0) {
-                container.innerHTML = `<div class="text-center py-10"><span class="text-4xl">🛒</span><p class="text-gray-400 font-bold mt-2">Draf pesanan kosong</p></div>`;
-                return;
-            }
-            container.innerHTML = keys.map(id => `
-                <div class="flex justify-between items-center border-b pb-4 border-gray-100">
-                    <div class="flex-1 text-left">
-                        <span class="text-[#064e3b] font-black text-[10px] uppercase">[${cart[id].displayId}]</span>
-                        <h4 class="text-[12px] font-bold text-gray-800 leading-tight">${cart[id].name}</h4>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <div class="flex items-center border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm h-8">
-                            <button onclick="updateCartItemQty('${id}', -1)" class="px-2.5 text-gray-400 hover:bg-gray-100 font-bold transition-colors">-</button>
-                            <span class="px-3 text-xs font-black text-[#064e3b] min-w-[20px] text-center">${cart[id].qty}</span>
-                            <button onclick="updateCartItemQty('${id}', 1)" class="px-2.5 text-gray-400 hover:bg-gray-100 font-bold transition-colors">+</button>
-                        </div>
-                        <button onclick="deleteFromCart('${id}')" class="text-red-300 hover:text-red-600 text-2xl ml-1">&times;</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Mengemaskini kuantiti item dalam bakul
-        function updateCartItemQty(id, delta) {
-            if (cart[id]) {
-                cart[id].qty = Math.max(1, cart[id].qty + delta);
-                updateCart();
-            }
-        }
-
-        // Memadam item dari bakul
+        function handleImageError(img, pureId, id) { if (img.src.includes('.jpg')) { img.src = `images/${pureId}.png`; } else if (img.src.includes('.png')) { img.onerror = null; img.src = `https://placehold.co/400x400/064e3b/fbbf24?text=${id}`; } }
+        function renderProducts(catFilter = 'all') { const grid = document.getElementById('product-grid'); grid.innerHTML = ''; const t = translations[currentLang]; const filtered = catFilter === 'all' ? products : products.filter(p => p.category === catFilter); filtered.forEach(p => { const pureId = p.id.split('-')[0].replace('*', ''); const card = document.createElement('div'); card.className = `product-card raya-card rounded-2xl overflow-hidden shadow-lg flex flex-col relative ${p.isSoldOut ? 'opacity-75 grayscale-[0.3]' : ''}`; card.innerHTML = ` <div class="aspect-square bg-gray-50 flex items-center justify-center relative overflow-hidden"> <img src="images/${pureId}.jpg" onclick="${p.isSoldOut ? '' : `openLightbox(this.src)`}" class="w-full h-full object-cover ${p.isSoldOut ? '' : 'cursor-zoom-in'}" onerror="handleImageError(this, '${pureId}', '${p.id}')"> ${p.isSoldOut ? `<div class="absolute inset-0 sold-out-overlay flex items-center justify-center"><span class="border-4 border-[#fbbf24] text-[#fbbf24] font-black text-lg px-3 py-1 rotate-[-15deg] uppercase">${t.stokHabis}</span></div>` : ''} ${p.youtubeId ? `<button onclick="openVideo('${p.youtubeId}')" class="absolute bottom-2 right-2 bg-[#064e3b]/80 text-[#fbbf24] p-2 rounded-full shadow-lg flex items-center gap-1 scale-90"><svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16"><path d="M11.596 8.697l-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/></svg><span class="text-[9px] font-bold">Video</span></button>` : ''} </div> <div class="p-3 flex-1 flex flex-col text-center"> <p class="text-[#064e3b] font-black text-[9px] opacity-60 uppercase">${p.id}</p> <h3 class="text-gray-800 text-[11px] font-extrabold h-8 line-clamp-2 leading-tight">${p.name}</h3> <p class="text-gray-400 text-[10px] italic">${p.spec}</p> <div class="mt-auto pt-3"> <div class="flex items-center justify-between border-2 border-gray-100 rounded-xl h-8 mb-2 bg-gray-50 ${p.isSoldOut ? 'opacity-30' : ''}"> <button onclick="changeProductQty('${p.id}', -1)" class="w-8 h-full font-bold text-gray-400">-</button> <input id="qty-${p.id}" type="number" value="1" min="1" readonly class="w-8 text-center text-xs font-black bg-transparent text-gray-800 focus:outline-none"> <button onclick="changeProductQty('${p.id}', 1)" class="w-8 h-full font-bold text-gray-400">+</button> </div> <button ${p.isSoldOut ? 'disabled' : `onclick="addToCart('${p.id}')"`} class="w-full ${p.isSoldOut ? 'bg-gray-300' : 'bg-[#064e3b]'} text-white py-2 rounded-xl text-[10px] font-black shadow-md">${p.isSoldOut ? t.stokHabis : t.tambah}</button> </div> </div>`; grid.appendChild(card); }); }
+        function changeProductQty(id, delta) { const input = document.getElementById(`qty-${id}`); if (input) input.value = Math.max(1, (parseInt(input.value) || 1) + delta); }
+        function addToCart(id) { const product = products.find(p => p.id === id); if (!product) return; const qty = parseInt(document.getElementById(`qty-${id}`).value) || 1; if (cart[id]) cart[id].qty += qty; else cart[id] = { name: product.name, qty: qty, displayId: product.id }; updateCart(); const countLabel = document.getElementById('cart-count'); countLabel.classList.add('scale-150'); setTimeout(() => countLabel.classList.remove('scale-150'), 200); }
+        function updateCart() { const count = Object.values(cart).reduce((a, b) => a + b.qty, 0); const t = translations[currentLang]; document.getElementById('cart-count').innerText = count; document.getElementById('cart-total-qty').innerText = `${count} ${t.unit}`; renderCartItems(); }
+        function renderCartItems() { const container = document.getElementById('cart-items'); const keys = Object.keys(cart); const t = translations[currentLang]; if (keys.length === 0) { container.innerHTML = `<div class="text-center py-10"><span class="text-4xl">🛒</span><p class="text-gray-400 font-bold mt-2">${t.cartSubtitle === 'List for price quotation' ? 'Order draft is empty' : (currentLang === 'zh' ? '草稿清单为空' : 'Draf pesanan kosong')}</p></div>`; return; } container.innerHTML = keys.map(id => ` <div class="flex justify-between items-center border-b pb-4 border-gray-100 text-left"> <div class="flex-1"><span class="text-[#064e3b] font-black text-[10px] uppercase">[${cart[id].displayId}]</span><h4 class="text-[12px] font-bold text-gray-800 leading-tight">${cart[id].name}</h4></div> <div class="flex items-center gap-2"> <div class="flex items-center border border-gray-200 rounded-lg h-7 bg-white"><button onclick="updateCartItemQty('${id}', -1)" class="px-2 text-gray-400 font-bold">-</button><span class="px-2 text-xs font-black text-[#064e3b] min-w-[20px] text-center">${cart[id].qty}</span><button onclick="updateCartItemQty('${id}', 1)" class="px-2 text-gray-400 font-bold">+</button></div> <button onclick="deleteFromCart('${id}')" class="text-red-300 text-2xl">&times;</button> </div> </div>`).join(''); }
+        function updateCartItemQty(id, delta) { if (cart[id]) { cart[id].qty = Math.max(1, cart[id].qty + delta); updateCart(); } }
         function deleteFromCart(id) { delete cart[id]; updateCart(); }
         function clearCart() { cart = {}; updateCart(); }
-
-        // Menapis produk mengikut kategori
-        function filterProducts(cat) {
-            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-            if(event) event.currentTarget.classList.add('active');
-            renderProducts(cat);
-        }
-
-        // Tatal paparan bakul
-        function toggleCart() {
-            const modal = document.getElementById('cart-modal');
-            modal.classList.toggle('hidden'); modal.classList.toggle('flex');
-        }
-
-        // Membuka lightbox gambar
-        function openLightbox(src) { 
-            document.getElementById('lightbox-img').src = src; 
-            document.getElementById('image-lightbox').classList.replace('hidden', 'flex'); 
-        }
-        function closeLightbox() { 
-            document.getElementById('image-lightbox').classList.replace('flex', 'hidden'); 
-        }
-
-        // Membuka video YouTube
-        function openVideo(youtubeId) {
-            if (!youtubeId) return;
-            const player = document.getElementById('youtube-player'); 
-            player.src = `https://www.youtube.com/embed/${youtubeId}?autoplay=1`;
-            document.getElementById('video-lightbox').classList.replace('hidden', 'flex'); 
-        }
-        
-        // Menutup video dan berhenti main
-        function closeVideo() {
-            const player = document.getElementById('youtube-player'); 
-            player.src = "";
-            document.getElementById('video-lightbox').classList.replace('flex', 'hidden');
-        }
-
-        // Menghantar pesanan ke WhatsApp
-        function checkout() {
-            const keys = Object.keys(cart);
-            if (keys.length === 0) return;
-            let totalQty = 0;
-            let msg = `🌙 *DRAGON ELITE FIREWORKS 2026 - PERTANYAAN PESANAN* 🌙\n`;
-            msg += `🙋‍♂️ *Agent:* [Sila Tulis Nama Anda]\n`;
-            msg += `----------------------------\n`;
-            keys.forEach((id, i) => {
-                const item = cart[id];
-                totalQty += item.qty;
-                msg += `${i+1}. *[${item.displayId}]* ${item.name}\n   👉 Kuantiti: *${item.qty} Unit*\n`;
-            });
-            msg += `----------------------------\n📦 *Jumlah Keseluruhan: ${totalQty} Unit*\n----------------------------\nBoss, sila berikan sebut harga (Quotation) untuk senarai di atas. Terima kasih! ✨`;
-            window.open(`https://wa.me/${currentAgent.phone}?text=${encodeURIComponent(msg)}`, '_blank');
-        }
-
-        window.onload = () => renderProducts();
+        function toggleCart() { const modal = document.getElementById('cart-modal'); modal.classList.toggle('hidden'); modal.classList.toggle('flex'); }
+        function filterProducts(cat) { document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active')); event.currentTarget.classList.add('active'); renderProducts(cat); }
+        function openLightbox(src) { document.getElementById('lightbox-img').src = src; document.getElementById('image-lightbox').classList.replace('hidden', 'flex'); }
+        function closeLightbox() { document.getElementById('image-lightbox').classList.replace('flex', 'hidden'); }
+        function openVideo(youtubeId) { document.getElementById('youtube-player').src = `https://www.youtube.com/embed/${youtubeId}?autoplay=1`; document.getElementById('video-lightbox').classList.replace('hidden', 'flex'); }
+        function closeVideo() { document.getElementById('youtube-player').src = ""; document.getElementById('video-lightbox').classList.replace('flex', 'hidden'); }
+        const agents = { 'hq': { name: 'Official HQ', phone: '60139853913' } };
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentAgent = agents[urlParams.get('id')] || agents['hq'];
+        function checkout() { const keys = Object.keys(cart); if (keys.length === 0) return; const t = translations[currentLang]; let totalQty = 0; let msg = t.waMsgOrder; keys.forEach((id, i) => { const item = cart[id]; totalQty += item.qty; msg += `${i+1}. *[${item.displayId}]* ${item.name}\n 👉 ${currentLang === 'zh' ? '数量' : (currentLang === 'en' ? 'Qty' : 'Kuantiti')}: *${item.qty} ${t.unit}*\n`; }); msg += t.waMsgFooter.replace('{qty}', totalQty); window.open(`https://wa.me/${currentAgent.phone}?text=${encodeURIComponent(msg)}`, '_blank'); }
+        function contactAgentSupport() { const t = translations[currentLang]; window.open(`https://wa.me/${currentAgent.phone}?text=${encodeURIComponent(t.waMsgEjen)}`, '_blank'); }
+        window.onload = () => setLanguage('ms');
     </script>
 </body>
 </html>
