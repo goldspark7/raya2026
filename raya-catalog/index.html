@@ -146,6 +146,12 @@
             </div>
             <div id="cart-items" class="max-h-[45vh] overflow-y-auto p-6 space-y-4"></div>
             <div class="p-6 border-t border-gray-100 bg-gray-50">
+                <!-- Name Input Box -->
+                <div class="mb-4">
+                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 ml-1" id="ui-label-name">Nama Anda / Your Name</label>
+                    <input type="text" id="user-name" placeholder="..." class="w-full bg-white border-2 border-gray-200 rounded-xl px-4 py-3 text-sm font-bold focus:border-[#fbbf24] focus:outline-none transition-all">
+                </div>
+
                 <div class="flex justify-between items-center mb-6"><span class="text-gray-400 font-bold text-sm uppercase" id="ui-cart-total-label">Jumlah:</span><span id="cart-total-qty" class="text-2xl font-black text-[#064e3b]">0 Unit</span></div>
                 <button onclick="checkout()" class="w-full bg-[#25D366] text-white py-5 rounded-2xl font-black text-lg shadow-xl flex items-center justify-center gap-3" id="ui-btn-whatsapp"><span>Hantar Ke WhatsApp</span></button>
             </div>
@@ -192,9 +198,10 @@
                 catSingle: "🚀 Single Shot",
                 catRoman: "☄️ Roman Candle",
                 catCake: "🎆 Cake/Box",
-                waMsgOrder: "🌙 *DRAGON ELITE FIREWORKS 2026 - PERTANYAAN PESANAN* 🌙\n🙋‍♂️ *Agent:* [Tulis Nama Anda]\n----------------------------\n",
+                labelName: "Nama Anda:",
+                waMsgOrder: "🌙 *DRAGON ELITE FIREWORKS 2026 - PERTANYAAN PESANAN* 🌙\n🙋‍♂️ *Agent:* {name}\n----------------------------\n",
                 waMsgFooter: "----------------------------\n📦 *Jumlah Keseluruhan: {qty} Unit*\n----------------------------\nBoss, sila berikan sebut harga (Quotation). Terima kasih! ✨",
-                waMsgEjen: "🌙 *DRAGON ELITE FIREWORKS 2026 - PERTANYAAN EJEN* 🌙\n\nHelo Boss, saya berminat untuk mendaftar sebagai ejen Dragon Elite bagi tahun 2026. Boleh kongsikan syarat dan pakej harga? Terima kasih!"
+                waMsgEjen: "🌙 *DRAGON ELITE FIREWORKS 2026 - PERTANYAAN EJEN* 🌙\n🙋‍♂️ *Nama:* {name}\n\nHelo Boss, saya berminat untuk mendaftar sebagai ejen Dragon Elite bagi tahun 2026. Boleh kongsikan syarat dan pakej harga? Terima kasih!"
             },
             en: {
                 navSubtitle: "2026 Catalogue 🌙",
@@ -231,9 +238,10 @@
                 catSingle: "🚀 Single Shot",
                 catRoman: "☄️ Roman Candle",
                 catCake: "🎆 Cake/Box",
-                waMsgOrder: "🌙 *DRAGON ELITE FIREWORKS 2026 - ORDER INQUIRY* 🌙\n🙋‍♂️ *Name:* [Type Your Name Here]\n----------------------------\n",
+                labelName: "Your Name:",
+                waMsgOrder: "🌙 *DRAGON ELITE FIREWORKS 2026 - ORDER INQUIRY* 🌙\n🙋‍♂️ *Name:* {name}\n----------------------------\n",
                 waMsgFooter: "----------------------------\n📦 *Total Quantity: {qty} Units*\n----------------------------\nBoss, please provide a quotation for the list above. Thank you! ✨",
-                waMsgEjen: "🌙 *DRAGON ELITE FIREWORKS 2026 - AGENT INQUIRY* 🌙\n\nHello Boss, I am interested in registering as a Dragon Elite agent for 2026. Could you share the requirements and price packages? Thank you!"
+                waMsgEjen: "🌙 *DRAGON ELITE FIREWORKS 2026 - AGENT INQUIRY* 🌙\n🙋‍♂️ *Name:* {name}\n\nHello Boss, I am interested in registering as a Dragon Elite agent for 2026. Could you share the requirements and price packages? Thank you!"
             },
             zh: {
                 navSubtitle: "2026 目录 🌙",
@@ -270,9 +278,10 @@
                 catSingle: "🚀 单发系列",
                 catRoman: "☄️ 吐珠/火箭",
                 catCake: "🎆 盆花/组合",
-                waMsgOrder: "🌙 *DRAGON ELITE FIREWORKS 2026 - 订单咨询* 🌙\n🙋‍♂️ *姓名:* [在此输入您的姓名]\n----------------------------\n",
+                labelName: "您的姓名:",
+                waMsgOrder: "🌙 *DRAGON ELITE FIREWORKS 2026 - 订单咨询* 🌙\n🙋‍♂️ *姓名:* {name}\n----------------------------\n",
                 waMsgFooter: "----------------------------\n📦 *总计数量: {qty} 单位*\n----------------------------\n老板，请提供以上清单的报价。谢谢！ ✨",
-                waMsgEjen: "🌙 *DRAGON ELITE FIREWORKS 2026 - 代理咨询* 🌙\n\n老板你好，我有兴趣申请成为 2026 年 Dragon Elite 的代理。请问可以分享申请条件和配套资料吗？谢谢！"
+                waMsgEjen: "🌙 *DRAGON ELITE FIREWORKS 2026 - 代理咨询* 🌙\n🙋‍♂️ *姓名:* {name}\n\n老板你好，我有兴趣申请成为 2026 年 Dragon Elite 的代理。请问可以分享申请条件和配套资料吗？谢谢！"
             }
         };
 
@@ -305,6 +314,7 @@
             document.getElementById('ui-btn-clear').innerText = t.btnClear;
             document.getElementById('ui-cart-total-label').innerText = t.cartTotalLabel;
             document.getElementById('ui-btn-whatsapp').querySelector('span').innerText = t.btnWhatsapp;
+            document.getElementById('ui-label-name').innerText = t.labelName;
 
             const listContainer = document.getElementById('ui-ejen-list');
             listContainer.innerHTML = t.ejenList.map(item => `<li class="flex items-start gap-3"><span class="text-[#fbbf24] mt-1">✓</span><span>${item}</span></li>`).join('');
@@ -332,7 +342,6 @@
             if (firstBtn) firstBtn.classList.add('active');
         }
 
-        // --- PRODUCT DATA (Same as before) ---
         const products = [
             { id: 'PM11N', name: 'HAPPY BOOM GLOW OF SUNSET', spec: '60/4/25', category: '手持系列', isSoldOut: false, youtubeId: 'MhFwVRAu1fI' },
             { id: 'PM22N', name: 'HAPPY BOOM 7" BESI', spec: '40/30/8', category: '手持系列', isSoldOut: false, youtubeId: 'WuGJeQxpEfM' },
@@ -412,22 +421,35 @@
         function closeLightbox() { document.getElementById('image-lightbox').classList.replace('flex', 'hidden'); }
         function openVideo(youtubeId) { document.getElementById('youtube-player').src = `https://www.youtube.com/embed/${youtubeId}?autoplay=1`; document.getElementById('video-lightbox').classList.replace('hidden', 'flex'); }
         function closeVideo() { document.getElementById('youtube-player').src = ""; document.getElementById('video-lightbox').classList.replace('flex', 'hidden'); }
+        
         const agents = { 'hq': { name: 'Official HQ', phone: '60129540804' } };
         const urlParams = new URLSearchParams(window.location.search);
         const currentAgent = agents[urlParams.get('id')] || agents['hq'];
-        function checkout() { const keys = Object.keys(cart); if (keys.length === 0) return; const t = translations[currentLang]; let totalQty = 0; let msg = t.waMsgOrder; keys.forEach((id, i) => { const item = cart[id]; totalQty += item.qty; msg += `${i+1}. *[${item.displayId}]* ${item.name}\n 👉 ${currentLang === 'zh' ? '数量' : (currentLang === 'en' ? 'Qty' : 'Kuantiti')}: *${item.qty} ${t.unit}*\n`; }); msg += t.waMsgFooter.replace('{qty}', totalQty); window.open(`https://wa.me/${currentAgent.phone}?text=${encodeURIComponent(msg)}`, '_blank'); }
-        function contactAgentSupport() { const t = translations[currentLang]; window.open(`https://wa.me/${currentAgent.phone}?text=${encodeURIComponent(t.waMsgEjen)}`, '_blank'); }
+
+        function checkout() { 
+            const keys = Object.keys(cart); 
+            if (keys.length === 0) return; 
+            const t = translations[currentLang];
+            const userName = document.getElementById('user-name').value.trim() || "...";
+            let totalQty = 0; 
+            let msg = t.waMsgOrder.replace('{name}', userName); 
+            keys.forEach((id, i) => { 
+                const item = cart[id]; 
+                totalQty += item.qty; 
+                msg += `${i+1}. *[${item.displayId}]* ${item.name}\n 👉 ${currentLang === 'zh' ? '数量' : (currentLang === 'en' ? 'Qty' : 'Kuantiti')}: *${item.qty} ${t.unit}*\n`; 
+            }); 
+            msg += t.waMsgFooter.replace('{qty}', totalQty); 
+            window.open(`https://wa.me/${currentAgent.phone}?text=${encodeURIComponent(msg)}`, '_blank'); 
+        }
+
+        function contactAgentSupport() { 
+            const t = translations[currentLang]; 
+            const userName = document.getElementById('user-name').value.trim() || "...";
+            const msg = t.waMsgEjen.replace('{name}', userName);
+            window.open(`https://wa.me/${currentAgent.phone}?text=${encodeURIComponent(msg)}`, '_blank'); 
+        }
+        
         window.onload = () => setLanguage('ms');
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
