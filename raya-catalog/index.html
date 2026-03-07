@@ -412,7 +412,7 @@
         function closeLightbox() { document.getElementById('image-lightbox').classList.replace('flex', 'hidden'); }
         function openVideo(youtubeId) { document.getElementById('youtube-player').src = `https://www.youtube.com/embed/${youtubeId}?autoplay=1`; document.getElementById('video-lightbox').classList.replace('hidden', 'flex'); }
         function closeVideo() { document.getElementById('youtube-player').src = ""; document.getElementById('video-lightbox').classList.replace('flex', 'hidden'); }
-        const agents = { 'hq': { name: 'Official HQ', phone: '60139853913' } };
+        const agents = { 'hq': { name: 'Official HQ', phone: '60129540804' } };
         const urlParams = new URLSearchParams(window.location.search);
         const currentAgent = agents[urlParams.get('id')] || agents['hq'];
         function checkout() { const keys = Object.keys(cart); if (keys.length === 0) return; const t = translations[currentLang]; let totalQty = 0; let msg = t.waMsgOrder; keys.forEach((id, i) => { const item = cart[id]; totalQty += item.qty; msg += `${i+1}. *[${item.displayId}]* ${item.name}\n 👉 ${currentLang === 'zh' ? '数量' : (currentLang === 'en' ? 'Qty' : 'Kuantiti')}: *${item.qty} ${t.unit}*\n`; }); msg += t.waMsgFooter.replace('{qty}', totalQty); window.open(`https://wa.me/${currentAgent.phone}?text=${encodeURIComponent(msg)}`, '_blank'); }
@@ -421,6 +421,7 @@
     </script>
 </body>
 </html>
+
 
 
 
